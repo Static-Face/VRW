@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Settings - My Wholesaling Hub</title>
+</head>
+<body>
+  <!-- HEADER -->
+  <header class="app-header">
+    <div class="brand">
+      <span>My Wholesaling Hub</span>
+    </div>
+    <button id="sidebarToggle" class="sidebar-toggle">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </button>
+  </header>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <nav class="nav-menu">
+      <ul>
+        <li><a href="index.html">Dashboard</a></li>
+        <li><a href="leads.html">Leads</a></li>
+        <li><a href="buyers.html">Buyers</a></li>
+        <li><a href="properties.html">Properties</a></li>
+        <li><a href="tools.html">Tools</a></li>
+        <li><a href="scripts.html">Scripts</a></li>
+        <li><a href="contracts.html">Contracts</a></li>
+        <!-- We remove direct link to 'advanced-settings.html' from the sidebar -->
+        <li><a href="settings.html" class="active">Settings</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+    <h1>Settings</h1>
+    <p class="page-description">
+      Update your profile, notification preferences, and other basic app settings.
+    </p>
+
+    <!-- BASIC SETTINGS FORM -->
+    <div class="settings-container">
+      
+      <!-- PROFILE SETTINGS -->
+      <section class="settings-section">
+        <h2>Profile</h2>
+        <p class="section-description">
+          Manage your personal information and contact details.
+        </p>
+
+        <div class="form-row column-split">
+          <div>
+            <label for="userFullName">Full Name</label>
+            <input type="text" id="userFullName" placeholder="e.g. John Doe" />
+          </div>
+          <div>
+            <label for="userEmail">Email Address</label>
+            <input type="email" id="userEmail" placeholder="e.g. you@company.com" />
+          </div>
+        </div>
+
+        <div class="form-row column-split">
+          <div>
+            <label for="userPhone">Phone Number</label>
+            <input type="text" id="userPhone" placeholder="e.g. 555-123-4567" />
+          </div>
+          <div>
+            <label for="userCompany">Company Name</label>
+            <input type="text" id="userCompany" placeholder="e.g. XYZ Home Buyers" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <label for="profileVisibility" class="toggle-label">
+            Publicly Visible Profile
+          </label>
+          <label class="switch">
+            <input type="checkbox" id="profileVisibility" />
+            <span class="slider round"></span>
+          </label>
+        </div>
+      </section>
+
+      <!-- NOTIFICATION PREFERENCES -->
+      <section class="settings-section">
+        <h2>Notifications</h2>
+        <p class="section-description">
+          Customize how you receive alerts and updates.
+        </p>
+
+        <div class="form-row">
+          <label for="emailNotifications" class="toggle-label">
+            Email Notifications
+          </label>
+          <label class="switch">
+            <input type="checkbox" id="emailNotifications" />
+            <span class="slider round"></span>
+          </label>
+        </div>
+
+        <div class="form-row">
+          <label for="smsNotifications" class="toggle-label">
+            SMS Notifications
+          </label>
+          <label class="switch">
+            <input type="checkbox" id="smsNotifications" />
+            <span class="slider round"></span>
+          </label>
+        </div>
+
+        <div class="form-row">
+          <label for="weeklyDigest" class="toggle-label">
+            Weekly Digest Email
+          </label>
+          <label class="switch">
+            <input type="checkbox" id="weeklyDigest" />
+            <span class="slider round"></span>
+          </label>
+        </div>
+      </section>
+
+      <!-- UI PREFERENCES -->
+      <section class="settings-section">
+        <h2>Interface</h2>
+        <p class="section-description">
+          Adjust basic interface preferences like theme or layout.
+        </p>
+
+        <div class="form-row column-split">
+          <div>
+            <label for="themeSelect">Theme</label>
+            <select id="themeSelect">
+              <option value="light">Light</option>
+              <option value="dark">Dark</option>
+              <option value="system">System Default</option>
+            </select>
+          </div>
+          <div>
+            <label for="fontSizeSelect">Font Size</label>
+            <select id="fontSizeSelect">
+              <option value="small">Small</option>
+              <option value="medium" selected>Medium</option>
+              <option value="large">Large</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+    </div> <!-- end settings-container -->
+
+    <!-- SAVE / CANCEL + ADVANCED BUTTON -->
+    <div class="form-actions">
+      <button class="btn save-btn" id="saveSettingsBtn">Save Settings</button>
+      <button class="btn cancel-btn" id="cancelBtn">Cancel</button>
+      <!-- This is the ONLY route to the advanced settings page -->
+      <button class="btn advanced-btn" id="goAdvancedBtn">
+        Go to Advanced Settings
+      </button>
+    </div>
+
+  </main>
+
+  <!-- =========================
+       SHARED CSS / STYLES
+  ========================= -->
+  <style>
+    /* RESET */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f1f2f3;
+      color: #333;
+    }
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+    /* HEADER */
+    .app-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(135deg, #444, #333);
+      color: #fff;
+      padding: 0.75rem 1rem;
+      height: 60px;
+      z-index: 1000;
+    }
+    .brand {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+    .sidebar-toggle {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+    .sidebar-toggle .bar {
+      width: 25px;
+      height: 3px;
+      background-color: #fff;
+      margin: 4px 0;
+      transition: 0.4s;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      background: linear-gradient(135deg, #555, #333);
+      color: #fff;
+      width: 240px;
+      flex-shrink: 0;
+      padding: 1rem;
+      transition: transform 0.3s ease;
+      min-height: calc(100vh - 3.25rem);
+      overflow: auto;
+    }
+    @media (max-width: 768px) {
+      .sidebar {
+        position: fixed;
+        top: 3.25rem; 
+        left: 0;
+        height: calc(100vh - 3.25rem);
+        transform: translateX(-250px);
+        z-index: 999;
+      }
+      .sidebar-toggle {
+        display: flex;
+      }
+      .sidebar-open {
+        transform: translateX(0);
+      }
+    }
+    .nav-menu ul {
+      list-style: none;
+      margin-top: 1rem;
+    }
+    .nav-menu ul li {
+      margin: 1rem 0;
+    }
+    .nav-menu ul li a {
+      display: block;
+      padding: 0.5rem 0.75rem;
+      border-radius: 4px;
+      font-weight: 500;
+      transition: background-color 0.2s ease;
+    }
+    .nav-menu ul li a:hover {
+      background-color: rgba(255,255,255,0.1);
+    }
+    .nav-menu ul li a.active {
+      background-color: rgba(255,255,255,0.2);
+    }
+
+    /* MAIN CONTENT */
+    .main-content {
+      padding: 1.5rem;
+    }
+    @media (max-width: 768px) {
+      .main-content {
+        margin-left: 0;
+      }
+    }
+    @media (min-width: 769px) {
+      .app-header {
+        position: fixed;
+        top: 0; left: 0; right: 0;
+      }
+      .sidebar {
+        position: fixed;
+        top: 60px;
+        left: 0;
+        bottom: 0;
+        width: 240px;
+        transform: none;
+      }
+      .main-content {
+        margin-left: 240px;
+        margin-top: 60px;
+        width: calc(100% - 240px);
+      }
+    }
+
+    /* PAGE TITLE */
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 0.5rem;
+    }
+    .page-description {
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+      color: #555;
+    }
+
+    /* SETTINGS CONTAINER & SECTIONS */
+    .settings-container {
+      background: #fff;
+      padding: 1.5rem;
+      border-radius: 6px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .settings-section {
+      margin-bottom: 2rem;
+    }
+    .settings-section h2 {
+      font-size: 1.3rem;
+      margin-bottom: 0.25rem;
+    }
+    .section-description {
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 1rem;
+    }
+    .form-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    .form-row.column-split {
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .form-row.column-split > div {
+      flex: 1;
+      min-width: 180px;
+      display: flex;
+      flex-direction: column;
+    }
+    label {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    input[type="text"],
+    input[type="email"],
+    select {
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    /* SWITCH (TOGGLE) */
+    .toggle-label {
+      flex: 1;
+      cursor: pointer;
+      font-weight: normal;
+      display: flex;
+      align-items: center;
+    }
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 46px;
+      height: 24px;
+      margin-left: auto;
+    }
+    .switch input {
+      opacity: 0; 
+      width: 0; 
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 24px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 16px;
+      width: 16px;
+      left: 4px;
+      bottom: 4px;
+      background-color: #fff;
+      transition: .4s;
+      border-radius: 50%;
+    }
+    input:checked + .slider {
+      background-color: #28a745;
+    }
+    input:checked + .slider:before {
+      transform: translateX(22px);
+    }
+    .slider.round {
+      border-radius: 24px;
+    }
+    .slider.round:before {
+      border-radius: 50%;
+    }
+
+    /* FORM ACTIONS */
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .btn {
+      display: inline-block;
+      padding: 0.6rem 1rem;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      border: none;
+      transition: background-color 0.2s ease;
+    }
+    .save-btn {
+      background-color: #28a745;
+      color: #fff;
+    }
+    .save-btn:hover {
+      background-color: #218838;
+    }
+    .cancel-btn {
+      background-color: #6c757d;
+      color: #fff;
+    }
+    .cancel-btn:hover {
+      background-color: #5a6268;
+    }
+    .advanced-btn {
+      background-color: #007bff;
+      color: #fff;
+    }
+    .advanced-btn:hover {
+      background-color: #0056b3;
+    }
+  </style>
+
+  <!-- =====================
+       JAVASCRIPT
+  ====================== -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // SIDEBAR TOGGLE (Mobile)
+      const sidebar = document.getElementById('sidebar');
+      const toggleBtn = document.getElementById('sidebarToggle');
+      toggleBtn.addEventListener('click', () => {
+        sidebar.classList.toggle('sidebar-open');
+      });
+
+      // DOM elements
+      const userFullName  = document.getElementById('userFullName');
+      const userEmail     = document.getElementById('userEmail');
+      const userPhone     = document.getElementById('userPhone');
+      const userCompany   = document.getElementById('userCompany');
+      const profileVis    = document.getElementById('profileVisibility');
+
+      const emailNotifs   = document.getElementById('emailNotifications');
+      const smsNotifs     = document.getElementById('smsNotifications');
+      const weeklyDigest  = document.getElementById('weeklyDigest');
+
+      const themeSelect   = document.getElementById('themeSelect');
+      const fontSizeSelect= document.getElementById('fontSizeSelect');
+
+      const saveSettingsBtn = document.getElementById('saveSettingsBtn');
+      const cancelBtn       = document.getElementById('cancelBtn');
+      const goAdvancedBtn   = document.getElementById('goAdvancedBtn');
+
+      // Load existing settings from localStorage (for demo)
+      const loaded = JSON.parse(localStorage.getItem('basicSettings')) || {};
+      userFullName.value  = loaded.userFullName  || "";
+      userEmail.value     = loaded.userEmail     || "";
+      userPhone.value     = loaded.userPhone     || "";
+      userCompany.value   = loaded.userCompany   || "";
+
+      profileVis.checked  = !!loaded.profileVis;
+      emailNotifs.checked = !!loaded.emailNotifs;
+      smsNotifs.checked   = !!loaded.smsNotifs;
+      weeklyDigest.checked= !!loaded.weeklyDigest;
+
+      themeSelect.value   = loaded.themeSelect   || "light";
+      fontSizeSelect.value= loaded.fontSizeSelect|| "medium";
+
+      // Save
+      saveSettingsBtn.addEventListener('click', () => {
+        const newSettings = {
+          userFullName:   userFullName.value.trim(),
+          userEmail:      userEmail.value.trim(),
+          userPhone:      userPhone.value.trim(),
+          userCompany:    userCompany.value.trim(),
+
+          profileVis:     profileVis.checked,
+          emailNotifs:    emailNotifs.checked,
+          smsNotifs:      smsNotifs.checked,
+          weeklyDigest:   weeklyDigest.checked,
+
+          themeSelect:    themeSelect.value,
+          fontSizeSelect: fontSizeSelect.value
+        };
+
+        // For this demo, we save to localStorage. In production, replace with API or other storage
+        localStorage.setItem('basicSettings', JSON.stringify(newSettings));
+        alert("Settings saved successfully (demo).");
+      });
+
+      // Cancel
+      cancelBtn.addEventListener('click', () => {
+        if (confirm("Discard changes and revert?")) {
+          window.location.reload();
+        }
+      });
+
+      // Advanced
+      goAdvancedBtn.addEventListener('click', () => {
+        // Only this button leads to advanced
+        window.location.href = "advanced-settings.html";
+      });
+    });
+  </script>
+</body>
+</html>

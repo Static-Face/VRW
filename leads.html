@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Leads - My Wholesaling Hub</title>
+</head>
+<body>
+  <!-- Header (Same as Dashboard) -->
+  <header class="app-header">
+    <div class="brand">
+      <span>My Wholesaling Hub</span>
+    </div>
+    <!-- The 3-line (hamburger) button -->
+    <button id="sidebarToggle" class="sidebar-toggle">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </button>
+  </header>
+
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar" id="sidebar">
+    <nav class="nav-menu">
+      <ul>
+        <li><a href="index.html">Dashboard</a></li>
+        <li><a href="leads.html" class="active">Leads</a></li>
+        <li><a href="buyers.html">Buyers</a></li>
+        <li><a href="properties.html">Properties</a></li>
+        <li><a href="tools.html">Tools</a></li>
+        <li><a href="scripts.html">Scripts</a></li>
+        <li><a href="contracts.html">Contracts</a></li>
+        <li><a href="settings.html">Settings</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <h1>Leads</h1>
+
+    <!-- Stats / Pipeline Summary Bar -->
+    <div class="stats-bar">
+      <div class="stat-item">
+        <span class="stat-label">Total Leads:</span>
+        <span id="totalLeadsCount" class="stat-value">0</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">New:</span>
+        <span id="newLeadsCount" class="stat-value">0</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Contacted:</span>
+        <span id="contactedLeadsCount" class="stat-value">0</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Negotiating:</span>
+        <span id="negotiatingLeadsCount" class="stat-value">0</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Contract:</span>
+        <span id="underContractLeadsCount" class="stat-value">0</span>
+      </div>
+    </div>
+
+    <!-- Toolbar (Search and Add New Lead) -->
+    <div class="toolbar">
+      <input 
+        type="text" 
+        id="searchInput" 
+        placeholder="Search leads by name, phone, address, status..." 
+      />
+      <select id="sortSelect">
+        <option value="">Sort By</option>
+        <option value="name">Name</option>
+        <option value="status">Status</option>
+        <option value="askingPrice">Asking Price</option>
+        <option value="arv">ARV</option>
+      </select>
+      <button id="addNewLeadBtn">+ Add New Lead</button>
+    </div>
+
+    <!-- Leads Table -->
+    <section class="page-content">
+      <table id="leadsTable">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>Address</th>
+            <th>Status</th>
+            <th>Asking Price</th>
+            <th>ARV</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Filled by JS -->
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <!-- Modal for Adding/Editing a Lead -->
+  <div class="modal" id="addLeadModal">
+    <div class="modal-content">
+      <span class="closeBtn" id="closeModal">&times;</span>
+      <h2 id="modalTitle">Add a New Lead</h2>
+
+      <form id="addLeadForm">
+        <label for="leadName">Name:</label>
+        <input type="text" id="leadName" required />
+
+        <label for="leadPhone">Phone:</label>
+        <input type="text" id="leadPhone" required />
+
+        <label for="leadAddress">Property Address:</label>
+        <input type="text" id="leadAddress" required />
+
+        <label for="leadStatus">Status:</label>
+        <select id="leadStatus">
+          <option value="New">New</option>
+          <option value="Contacted">Contacted</option>
+          <option value="Negotiating">Negotiating</option>
+          <option value="Under Contract">Under Contract</option>
+          <option value="Closed">Closed</option>
+        </select>
+
+        <label for="leadAsking">Asking Price:</label>
+        <input type="number" id="leadAsking" placeholder="e.g. 75000" required />
+
+        <label for="leadARV">ARV:</label>
+        <input type="number" id="leadARV" placeholder="After-Repair Value" />
+
+        <!-- Example extra field for demonstration -->
+        <label for="leadMotivation">Motivation Level (1-10):</label>
+        <input type="number" id="leadMotivation" placeholder="e.g. 7" min="1" max="10" />
+
+        <button type="submit" id="submitLeadBtn">Add Lead</button>
+      </form>
+    </div>
+  </div>
+
+  <style>
+    /* RESET */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* GLOBAL STYLES */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f1f2f3;
+      color: #333;
+    }
+
+    /* LINKS */
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* HEADER */
+    .app-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(135deg, #444, #333);
+      color: #fff;
+      padding: 0.75rem 1rem;
+      height: 60px;
+      z-index: 1000;
+    }
+    .app-header .brand {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    /* HAMBURGER (TOGGLE) BUTTON */
+    .sidebar-toggle {
+      display: none; /* hidden by default, shown via media query below */
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+    .sidebar-toggle .bar {
+      width: 25px;
+      height: 3px;
+      background-color: #fff;
+      margin: 4px 0;
+      transition: 0.4s;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      background: linear-gradient(135deg, #555, #333);
+      color: #fff;
+      width: 240px;
+      flex-shrink: 0;
+      padding: 1rem;
+      transition: transform 0.3s ease;
+      min-height: calc(100vh - 3.25rem); 
+      overflow: auto;
+    }
+    @media (max-width: 768px) {
+      .sidebar {
+        position: fixed;
+        top: 3.25rem; 
+        left: 0;
+        height: calc(100vh - 3.25rem);
+        transform: translateX(-250px);
+        z-index: 999;
+      }
+      .sidebar-toggle {
+        display: flex; /* show hamburger on mobile */
+      }
+      .sidebar-open {
+        transform: translateX(0);
+      }
+    }
+
+    /* NAV MENU */
+    .nav-menu ul {
+      list-style: none;
+      margin-top: 1rem;
+    }
+    .nav-menu ul li {
+      margin: 1rem 0;
+    }
+    .nav-menu ul li a {
+      display: block;
+      padding: 0.5rem 0.75rem;
+      border-radius: 4px;
+      font-weight: 500;
+      transition: background-color 0.2s ease;
+    }
+    .nav-menu ul li a:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+    .nav-menu ul li a.active {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    /* MAIN CONTENT */
+    .main-content {
+      padding: 1.5rem;
+    }
+    @media (max-width: 768px) {
+      .main-content {
+        margin-left: 0;
+      }
+    }
+    @media (min-width: 769px) {
+      .app-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+      }
+      .sidebar {
+        position: fixed;
+        top: 60px;
+        left: 0;
+        bottom: 0;
+        width: 240px;
+        transform: none; 
+      }
+      .main-content {
+        margin-left: 240px; 
+        margin-top: 60px; 
+        width: calc(100% - 240px);
+      }
+    }
+
+    /* PAGE TITLE / DESCRIPTION */
+    .main-content h1 {
+      font-size: 1.8rem;
+      margin-bottom: 0.75rem;
+    }
+    .page-description {
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+      color: #555;
+    }
+
+    /* STATS BAR */
+    .stats-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      background-color: #fff;
+      padding: 1rem;
+      border-radius: 6px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin-bottom: 1rem;
+    }
+    .stat-item {
+      min-width: 120px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .stat-label {
+      font-weight: 500;
+      margin-bottom: 0.2rem;
+    }
+    .stat-value {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #444;
+    }
+
+    /* TOOLBAR */
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .toolbar input[type="text"] {
+      flex: 1;
+      padding: 0.5rem;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    .toolbar select {
+      padding: 0.5rem;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    #addNewLeadBtn {
+      background: #28a745;
+      color: #fff;
+      border: none;
+      padding: 0.7rem 1rem;
+      cursor: pointer;
+      border-radius: 4px;
+      font-size: 0.95rem;
+      transition: background 0.2s;
+    }
+    #addNewLeadBtn:hover {
+      background: #218838;
+    }
+
+    /* TABLE */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    thead {
+      background: #333;
+      color: #fff;
+    }
+    th, td {
+      padding: 0.8rem;
+      border: 1px solid #ccc;
+      text-align: left;
+      vertical-align: middle;
+    }
+    tbody tr:nth-child(even) {
+      background: #f9f9f9;
+    }
+    /* Hover effect on row */
+    tbody tr:hover {
+      background-color: #f1f7ff;
+    }
+
+    /* STATUS BADGES */
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.6rem;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+    .badge-new { background: #17a2b8; color: #fff; }         /* Blueish for New */
+    .badge-contacted { background: #ffc107; color: #333; }   /* Yellow for Contacted */
+    .badge-negotiating { background: #6c757d; color: #fff; } /* Gray for Negotiating */
+    .badge-contract { background: #28a745; color: #fff; }     /* Green for Under Contract */
+    .badge-closed { background: #343a40; color: #fff; }       /* Dark for Closed */
+
+    /* BUTTONS */
+    .btn {
+      display: inline-block;
+      padding: 0.4rem 0.75rem;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      border: none;
+      cursor: pointer;
+      margin-right: 0.25rem;
+      transition: background-color 0.2s ease;
+    }
+    .editBtn {
+      background-color: #007bff;
+      color: #fff;
+    }
+    .editBtn:hover {
+      background-color: #0056b3;
+    }
+    .removeBtn {
+      background-color: #dc3545;
+      color: #fff;
+    }
+    .removeBtn:hover {
+      background-color: #c82333;
+    }
+
+    /* MODAL */
+    .modal {
+      display: none; 
+      position: fixed;
+      z-index: 999;
+      left: 0; 
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+    }
+    .modal-content {
+      background: #fff;
+      margin: 5% auto;
+      padding: 2rem;
+      width: 400px;
+      position: relative;
+      border-radius: 5px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    .closeBtn {
+      position: absolute;
+      top: 8px;
+      right: 12px;
+      color: #aaa;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+    .closeBtn:hover {
+      color: #000;
+    }
+    label {
+      display: block;
+      margin: 0.5rem 0 0.2rem;
+      font-weight: 500;
+    }
+    input[type="text"],
+    input[type="number"],
+    select {
+      width: 100%;
+      padding: 0.55rem;
+      margin-bottom: 1rem;
+      box-sizing: border-box;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    button[type="submit"] {
+      background: #007bff;
+      border: none;
+      color: #fff;
+      padding: 0.7rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+    button[type="submit"]:hover {
+      background: #0069d9;
+    }
+
+    /* MOBILE-FRIENDLY TABLE (Card-like) */
+    @media (max-width: 768px) {
+      table thead {
+        display: none;
+      }
+      table, table tbody, table tr, table td {
+        display: block;
+        width: 100%;
+      }
+      table tr {
+        margin-bottom: 1rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+      table td {
+        border: none; 
+        border-bottom: 1px solid #ddd;
+        position: relative;
+        padding: 0.6rem;
+      }
+      table td:last-child {
+        border-bottom: none;
+      }
+      table td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        display: inline-block;
+        width: 50%;
+        color: #555;
+      }
+    }
+  </style>
+
+  <!-- Leads JS -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // SIDEBAR TOGGLE (Mobile)
+      const sidebar       = document.getElementById('sidebar');
+      const toggleBtn     = document.getElementById('sidebarToggle');
+      toggleBtn.addEventListener('click', () => {
+        sidebar.classList.toggle('sidebar-open');
+      });
+
+      // DOM Elements
+      const addLeadBtn      = document.getElementById('addNewLeadBtn');
+      const addLeadModal    = document.getElementById('addLeadModal');
+      const closeModalBtn   = document.getElementById('closeModal');
+      const addLeadForm     = document.getElementById('addLeadForm');
+      const leadsTableBody  = document.querySelector('#leadsTable tbody');
+      const searchInput     = document.getElementById('searchInput');
+      const sortSelect      = document.getElementById('sortSelect');
+      const modalTitle      = document.getElementById('modalTitle');
+      const submitLeadBtn   = document.getElementById('submitLeadBtn');
+
+      // Form Fields
+      const leadNameField      = document.getElementById('leadName');
+      const leadPhoneField     = document.getElementById('leadPhone');
+      const leadAddressField   = document.getElementById('leadAddress');
+      const leadStatusField    = document.getElementById('leadStatus');
+      const leadAskingField    = document.getElementById('leadAsking');
+      const leadARVField       = document.getElementById('leadARV');
+      const leadMotivationField= document.getElementById('leadMotivation');
+
+      // Stats
+      const totalLeadsCount       = document.getElementById('totalLeadsCount');
+      const newLeadsCount         = document.getElementById('newLeadsCount');
+      const contactedLeadsCount   = document.getElementById('contactedLeadsCount');
+      const negotiatingLeadsCount = document.getElementById('negotiatingLeadsCount');
+      const underContractCount    = document.getElementById('underContractLeadsCount');
+
+      // Track if we're editing an existing lead (index) or adding a new one
+      let editIndex = null;
+
+      // Load leads from localStorage or init empty
+      let leadsData = JSON.parse(localStorage.getItem('leadsData')) || [];
+
+      // RENDER LEADS
+      function renderLeads(dataArray) {
+        leadsTableBody.innerHTML = "";
+        dataArray.forEach((lead, idx) => {
+          const row = document.createElement('tr');
+
+          // Name
+          row.appendChild(createCell(lead.name,  "Name"));
+          // Phone
+          row.appendChild(createCell(lead.phone, "Phone"));
+          // Address
+          row.appendChild(createCell(lead.address, "Address"));
+
+          // Status (badge)
+          const statusTd = document.createElement('td');
+          statusTd.setAttribute('data-label', 'Status');
+          const statusBadge = document.createElement('span');
+          statusBadge.classList.add('badge');
+
+          // Assign a class based on the lead status
+          switch ((lead.status || "").toLowerCase()) {
+            case 'new': statusBadge.classList.add('badge-new'); break;
+            case 'contacted': statusBadge.classList.add('badge-contacted'); break;
+            case 'negotiating': statusBadge.classList.add('badge-negotiating'); break;
+            case 'under contract': statusBadge.classList.add('badge-contract'); break;
+            case 'closed': statusBadge.classList.add('badge-closed'); break;
+            default: statusBadge.style.background = '#ccc'; statusBadge.style.color = '#000'; 
+          }
+          statusBadge.textContent = lead.status;
+          statusTd.appendChild(statusBadge);
+          row.appendChild(statusTd);
+
+          // Asking Price / ARV
+          row.appendChild(createCell(`$${parseFloat(lead.askingPrice || 0).toLocaleString()}`, "Asking Price"));
+          row.appendChild(createCell(`$${parseFloat(lead.arv || 0).toLocaleString()}`, "ARV"));
+
+          // Actions
+          const actionsTd = createCell("", "Actions");
+
+          // Edit button
+          const editBtn = document.createElement('button');
+          editBtn.classList.add('btn', 'editBtn');
+          editBtn.textContent = '✎ Edit';
+          editBtn.addEventListener('click', () => editLead(idx));
+          actionsTd.appendChild(editBtn);
+
+          // Remove button
+          const removeBtn = document.createElement('button');
+          removeBtn.classList.add('btn', 'removeBtn');
+          removeBtn.textContent = '🗑 Remove';
+          removeBtn.addEventListener('click', () => removeLead(idx));
+          actionsTd.appendChild(removeBtn);
+
+          row.appendChild(actionsTd);
+          leadsTableBody.appendChild(row);
+        });
+      }
+
+      // Helper for creating a TD with data-label
+      function createCell(content, label) {
+        const td = document.createElement('td');
+        td.setAttribute('data-label', label);
+        td.textContent = content;
+        return td;
+      }
+
+      // UPDATE STATS
+      function updateStatsBar(dataArray) {
+        const total         = dataArray.length;
+        const newCount      = dataArray.filter(l => l.status === 'New').length;
+        const contacted     = dataArray.filter(l => l.status === 'Contacted').length;
+        const negotiating   = dataArray.filter(l => l.status === 'Negotiating').length;
+        const underContract = dataArray.filter(l => l.status === 'Under Contract').length;
+
+        totalLeadsCount.textContent       = total;
+        newLeadsCount.textContent         = newCount;
+        contactedLeadsCount.textContent   = contacted;
+        negotiatingLeadsCount.textContent = negotiating;
+        underContractCount.textContent    = underContract;
+      }
+
+      // SAVE TO LOCALSTORAGE
+      function saveLeadsToLocalStorage(data) {
+        localStorage.setItem('leadsData', JSON.stringify(data));
+      }
+
+      // REFRESH
+      function refreshLeads() {
+        renderLeads(leadsData);
+        updateStatsBar(leadsData);
+        saveLeadsToLocalStorage(leadsData);
+      }
+      refreshLeads();
+
+      // Show/Hide Modal
+      function showModal() {
+        addLeadModal.style.display = 'block';
+      }
+      function hideModal() {
+        addLeadModal.style.display = 'none';
+      }
+
+      // CLICK: ADD NEW LEAD
+      addLeadBtn.addEventListener('click', () => {
+        editIndex = null;
+        modalTitle.textContent = "Add a New Lead";
+        submitLeadBtn.textContent = "Add Lead";
+
+        // Clear the form
+        leadNameField.value        = "";
+        leadPhoneField.value       = "";
+        leadAddressField.value     = "";
+        leadStatusField.value      = "New";
+        leadAskingField.value      = "";
+        leadARVField.value         = "";
+        leadMotivationField.value  = "";
+
+        showModal();
+      });
+
+      // CLOSE MODAL
+      closeModalBtn.addEventListener('click', hideModal);
+      window.addEventListener('click', (e) => {
+        if (e.target === addLeadModal) {
+          hideModal();
+        }
+      });
+
+      // SUBMIT: ADD/EDIT LEAD
+      addLeadForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        // Collect form data
+        const leadObj = {
+          name:         leadNameField.value.trim(),
+          phone:        leadPhoneField.value.trim(),
+          address:      leadAddressField.value.trim(),
+          status:       leadStatusField.value,
+          askingPrice:  leadAskingField.value,
+          arv:          leadARVField.value,
+          motivation:   leadMotivationField.value.trim() // example extra field
+        };
+
+        if (editIndex === null) {
+          // ADD NEW
+          leadsData.unshift(leadObj);
+        } else {
+          // EDIT EXISTING
+          leadsData[editIndex] = leadObj;
+        }
+
+        refreshLeads();
+        addLeadForm.reset();
+        hideModal();
+      });
+
+      // EDIT LEAD
+      function editLead(index) {
+        editIndex = index;
+        const leadToEdit = leadsData[index];
+
+        leadNameField.value       = leadToEdit.name;
+        leadPhoneField.value      = leadToEdit.phone;
+        leadAddressField.value    = leadToEdit.address;
+        leadStatusField.value     = leadToEdit.status;
+        leadAskingField.value     = leadToEdit.askingPrice;
+        leadARVField.value        = leadToEdit.arv || "";
+        leadMotivationField.value = leadToEdit.motivation || "";
+
+        modalTitle.textContent = "Edit Lead";
+        submitLeadBtn.textContent = "Save Changes";
+        showModal();
+      }
+
+      // REMOVE LEAD
+      function removeLead(index) {
+        leadsData.splice(index, 1);
+        refreshLeads();
+      }
+
+      // SEARCH
+      searchInput.addEventListener('input', () => {
+        const keyword = searchInput.value.toLowerCase();
+        const filtered = leadsData.filter(l => 
+          l.name.toLowerCase().includes(keyword) ||
+          l.phone.toLowerCase().includes(keyword) ||
+          l.address.toLowerCase().includes(keyword) ||
+          (l.status && l.status.toLowerCase().includes(keyword))
+        );
+        renderLeads(filtered);
+      });
+
+      // SORT
+      sortSelect.addEventListener('change', () => {
+        const sortBy = sortSelect.value;
+        if (!sortBy) {
+          // Show original data if "Sort By" is reset
+          renderLeads(leadsData);
+          return;
+        }
+        const leadsCopy = [...leadsData];
+        leadsCopy.sort((a, b) => {
+          if (sortBy === 'name' || sortBy === 'status') {
+            return (a[sortBy] || "").localeCompare(b[sortBy] || "");
+          } else {
+            // for numeric sorts: askingPrice or arv
+            return parseFloat(a[sortBy] || 0) - parseFloat(b[sortBy] || 0);
+          }
+        });
+        renderLeads(leadsCopy);
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Advanced Editable Dashboard - Wholesaling Hub</title>
+  <!-- Chart.js for advanced chart editing -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    /* RESET & GLOBAL */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f1f2f3;
+      color: #333;
+      transition: background 0.3s, color 0.3s;
+    }
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+    button {
+      cursor: pointer;
+    }
+    .hidden {
+      display: none;
+    }
+
+    /* HEADER (Same style as "Leads" snippet) */
+    .app-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(135deg, #444, #333);
+      color: #fff;
+      padding: 0.75rem 1rem;
+      height: 60px;
+      z-index: 1000;
+      position: fixed;
+      top: 0; 
+      left: 0; 
+      right: 0;
+    }
+    .app-header .brand {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+    /* HAMBURGER (TOGGLE) BUTTON */
+    .sidebar-toggle {
+      display: none; 
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+    .sidebar-toggle .bar {
+      width: 25px;
+      height: 3px;
+      background-color: #fff;
+      margin: 4px 0;
+      transition: 0.4s;
+    }
+    @media (max-width: 768px) {
+      .sidebar-toggle {
+        display: flex; /* show hamburger on mobile */
+      }
+    }
+
+    /* SIDEBAR (Same style as "Leads" snippet) */
+    .sidebar {
+      background: linear-gradient(135deg, #555, #333);
+      color: #fff;
+      width: 240px;
+      padding: 1rem;
+      transition: transform 0.3s ease;
+      min-height: calc(100vh - 3.25rem);
+      overflow: auto;
+      position: fixed;
+      top: 60px;
+      left: 0;
+      bottom: 0;
+      transform: none; 
+    }
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-250px);
+        z-index: 999;
+      }
+    }
+    .sidebar-open {
+      transform: translateX(0);
+    }
+    .nav-menu ul {
+      list-style: none;
+      margin-top: 1rem;
+    }
+    .nav-menu ul li {
+      margin: 1rem 0;
+    }
+    .nav-menu ul li a {
+      display: block;
+      padding: 0.5rem 0.75rem;
+      border-radius: 4px;
+      font-weight: 500;
+      transition: background-color 0.2s ease;
+    }
+    .nav-menu ul li a:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+    .nav-menu ul li a.active {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    /* MAIN CONTENT (Similar to "Leads" snippet) */
+    .main-content {
+      margin-left: 240px; 
+      margin-top: 60px; 
+      width: calc(100% - 240px);
+      padding: 1.5rem;
+      transition: margin 0.3s;
+    }
+    @media (max-width: 768px) {
+      .main-content {
+        margin-left: 0; /* no left margin on mobile */
+        width: 100%;
+      }
+    }
+    .main-content h1 {
+      font-size: 1.8rem;
+      margin-bottom: 0.75rem;
+    }
+
+    /* EDIT MODE BUTTON (moved to main content) */
+    .edit-mode-btn {
+      background: #28a745;
+      color: #fff;
+      border: none;
+      padding: 0.6rem 1rem;
+      border-radius: 4px;
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+    }
+    .edit-mode-btn:hover {
+      background: #218838;
+    }
+
+    /* EDIT MODE HIGHLIGHT FOR CARDS */
+    body.edit-mode .card {
+      border: 2px dashed #999;
+    }
+    body.edit-mode .drag-handle {
+      display: block;
+    }
+
+    /* CARDS / DRAG & DROP (like previous advanced) */
+    .cards-container {
+      display: flex; 
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .card {
+      background-color: #fff;
+      color: #444;
+      border-radius: 6px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      min-width: 240px;
+      min-height: 140px;
+      padding: 1rem;
+      position: relative;
+      transition: transform 0.3s;
+    }
+    .card h3 {
+      margin-bottom: 0.5rem;
+      font-size: 1.15rem;
+      font-weight: 600;
+    }
+    .big-number {
+      font-size: 2rem;
+      font-weight: bold;
+      margin-bottom: 0.25rem;
+      color: #333;
+    }
+    .card-description {
+      font-size: 0.9rem;
+      color: #666;
+    }
+    .drag-handle {
+      display: none; 
+      position: absolute;
+      top: 0.5rem; 
+      left: 0.5rem;
+      background: #666;
+      color: #fff;
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      cursor: move;
+    }
+    .card.drag-over {
+      border: 2px dashed #007bff; 
+    }
+
+    /* INLINE EDIT FIELDS */
+    .edit-fields {
+      display: none;
+      flex-direction: column;
+      gap: 0.4rem;
+      margin-top: 0.5rem;
+    }
+    .edit-fields input[type="text"],
+    .edit-fields input[type="number"] {
+      width: 100%;
+      padding: 0.4rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .edit-fields .save-cancel-row {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.25rem;
+    }
+    .save-btn, .cancel-btn {
+      background: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 0.4rem 0.75rem;
+      font-size: 0.85rem;
+    }
+    .cancel-btn {
+      background: #6c757d;
+    }
+    .save-btn:hover {
+      background: #0069d9;
+    }
+    .cancel-btn:hover {
+      background: #5a6268;
+    }
+
+    /* CHART SECTION */
+    .chart-section {
+      background: #fff;
+      color: #333;
+      margin-top: 1.5rem;
+      padding: 1rem;
+      border-radius: 6px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      position: relative;
+    }
+    .chart-section h2 {
+      margin-bottom: 0.5rem;
+    }
+    .chart-container {
+      width: 100%;
+      max-width: 600px; 
+      margin: 0 auto;
+    }
+    .chart-edit-btn {
+      position: absolute;
+      top: 0.5rem; right: 0.5rem;
+      background: #999;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 0.4rem 0.6rem;
+      font-size: 0.85rem;
+      display: none; /* only show in edit-mode */
+    }
+    body.edit-mode .chart-section .chart-edit-btn {
+      display: inline-block;
+    }
+    .chart-edit-form {
+      display: none;
+      background: #fefefe;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      padding: 1rem;
+      margin-top: 1rem;
+    }
+    .chart-edit-form .field {
+      margin-bottom: 0.75rem;
+    }
+    .chart-edit-form label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+    .chart-edit-form input[type="text"],
+    .chart-edit-form input[type="number"] {
+      width: 100%;
+      padding: 0.4rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .chart-edit-form .chart-data-row {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .chart-edit-form .remove-data-btn {
+      background: #dc3545;
+      color: #fff;
+      border: none;
+      padding: 0.3rem 0.5rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .chart-edit-form .add-data-btn {
+      background: #17a2b8;
+      color: #fff;
+      border: none;
+      padding: 0.3rem 0.6rem;
+      border-radius: 4px;
+      margin-bottom: 0.75rem;
+    }
+
+    /* NOTES & PIPELINE */
+    .notes-area {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    .notes-area > div {
+      background: #fff;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      border-radius: 6px;
+      padding: 1rem;
+    }
+    .notes-area h2 {
+      margin-bottom: 0.75rem;
+    }
+    .notes-form {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 1rem;
+    }
+    .notes-form textarea {
+      resize: vertical;
+      padding: 0.5rem;
+      margin-bottom: 0.5rem;
+      font-family: inherit;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .notes-form button {
+      align-self: flex-start;
+      background-color: #007bff;
+      color: #fff;
+      padding: 0.6rem 1rem;
+      border: none;
+      border-radius: 4px;
+    }
+    .notes-form button:hover {
+      background-color: #0069d9;
+    }
+    .notes-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .notes-list li {
+      background: #f9f9f9;
+      border-left: 4px solid #333;
+      padding: 0.5rem 1rem;
+      margin-bottom: 0.5rem;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .remove-note-btn {
+      background-color: #dc3545;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 0.4rem 0.7rem;
+      cursor: pointer;
+    }
+    .remove-note-btn:hover {
+      background-color: #c82333;
+    }
+
+    /* PIPELINE */
+    .pipeline-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 0.5rem;
+    }
+    .pipeline-table thead {
+      background: #eee;
+    }
+    .pipeline-table th, .pipeline-table td {
+      text-align: left;
+      padding: 0.75rem;
+      border-bottom: 1px solid #ccc;
+    }
+    .pipeline-table tbody tr:nth-child(even) {
+      background: #f9f9f9;
+    }
+    .pipeline-edit-btn {
+      background: #999;
+      color: #fff;
+      border: none;
+      padding: 0.3rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      display: none; /* show in edit-mode */
+    }
+    body.edit-mode .pipeline-edit-btn {
+      display: inline-block;
+    }
+    .pipeline-edit-form {
+      display: none;
+      margin-top: 0.5rem;
+      background: #fefefe;
+      border: 1px solid #ccc;
+      padding: 0.75rem;
+      border-radius: 6px;
+    }
+    .pipeline-edit-form .field-row {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .pipeline-edit-form input[type="text"],
+    .pipeline-edit-form input[type="number"] {
+      padding: 0.4rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .pipeline-edit-form .remove-pipeline-btn {
+      background: #dc3545;
+      color: #fff;
+      border: none;
+      padding: 0.3rem 0.5rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .pipeline-edit-form .add-pipeline-btn {
+      background: #17a2b8;
+      color: #fff;
+      border: none;
+      padding: 0.4rem 0.8rem;
+      border-radius: 4px;
+      margin-top: 0.5rem;
+    }
+    .pipeline-edit-form .save-pipeline-btn {
+      background: #007bff;
+      color: #fff;
+      border: none;
+      padding: 0.4rem 0.8rem;
+      border-radius: 4px;
+      margin-left: auto;
+      display: block;
+      margin-top: 0.5rem;
+    }
+
+    /* MOBILE-FRIENDLY TABLE (Card-like) for pipeline, etc. if needed */
+    @media (max-width: 768px) {
+      .pipeline-table thead {
+        display: none;
+      }
+      .pipeline-table, .pipeline-table tbody, .pipeline-table tr, .pipeline-table td {
+        display: block;
+        width: 100%;
+      }
+      .pipeline-table tr {
+        margin-bottom: 1rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+      .pipeline-table td {
+        border: none;
+        border-bottom: 1px solid #ddd;
+        position: relative;
+        padding: 0.6rem;
+      }
+      .pipeline-table td:last-child {
+        border-bottom: none;
+      }
+      .pipeline-table td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        display: inline-block;
+        width: 50%;
+        color: #555;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="app-header">
+    <div class="brand">
+      <span>My Wholesaling Hub</span>
+    </div>
+    <!-- The 3-line (hamburger) button on the right -->
+    <button id="sidebarToggle" class="sidebar-toggle">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </button>
+  </header>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <nav class="nav-menu">
+      <ul>
+        <li><a href="index.html" class="active">Dashboard</a></li>
+        <li><a href="leads.html">Leads</a></li>
+        <li><a href="buyers.html">Buyers</a></li>
+        <li><a href="properties.html">Properties</a></li>
+        <li><a href="tools.html">Tools</a></li>
+        <li><a href="scripts.html">Scripts</a></li>
+        <li><a href="contracts.html">Contracts</a></li>
+        <li><a href="settings.html">Settings</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+    <h1>Advanced Editable Dashboard</h1>
+
+    <!-- Our "Enable Edit Mode" button is now here in the main content -->
+    <button class="edit-mode-btn" id="toggleEditModeBtn">Enable Edit Mode</button>
+
+    <!-- CARDS -->
+    <div id="cardsContainer" class="cards-container">
+      <!-- 8 example cards: each can be dragged & edited in edit-mode -->
+      <div class="card" draggable="true" data-key="cardNewLeads">
+        <div class="drag-handle">☰</div>
+        <h3 class="title">New Leads</h3>
+        <p class="big-number count">--</p>
+        <p class="card-description desc">
+          Newly added leads not yet contacted.
+        </p>
+        <div class="edit-fields">
+          <input type="text" class="edit-title" placeholder="Title" />
+          <input type="text" class="edit-count" placeholder="Count" />
+          <input type="text" class="edit-desc" placeholder="Description" />
+          <div class="save-cancel-row">
+            <button class="save-btn">Save</button>
+            <button class="cancel-btn">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" draggable="true" data-key="cardUnderContract">
+        <div class="drag-handle">☰</div>
+        <h3 class="title">Deals Under Contract</h3>
+        <p class="big-number count">--</p>
+        <p class="card-description desc">
+          Properties under contract.
+        </p>
+        <div class="edit-fields">
+          <input type="text" class="edit-title" placeholder="Title" />
+          <input type="text" class="edit-count" placeholder="Count" />
+          <input type="text" class="edit-desc" placeholder="Description" />
+          <div class="save-cancel-row">
+            <button class="save-btn">Save</button>
+            <button class="cancel-btn">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" draggable="true" data-key="cardClosedDeals">
+        <div class="drag-handle">☰</div>
+        <h3 class="title">Closed Deals (This Month)</h3>
+        <p class="big-number count">--</p>
+        <p class="card-description desc">
+          Deals closed this month.
+        </p>
+        <div class="edit-fields">
+          <input type="text" class="edit-title" placeholder="Title" />
+          <input type="text" class="edit-count" placeholder="Count" />
+          <input type="text" class="edit-desc" placeholder="Description" />
+          <div class="save-cancel-row">
+            <button class="save-btn">Save</button>
+            <button class="cancel-btn">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" draggable="true" data-key="cardTotalBuyers">
+        <div class="drag-handle">☰</div>
+        <h3 class="title">Total Buyers</h3>
+        <p class="big-number count">--</p>
+        <p class="card-description desc">
+          Active buyers in your database.
+        </p>
+        <div class="edit-fields">
+          <input type="text" class="edit-title" placeholder="Title" />
+          <input type="text" class="edit-count" placeholder="Count" />
+          <input type="text" class="edit-desc" placeholder="Description" />
+          <div class="save-cancel-row">
+            <button class="save-btn">Save</button>
+            <button class="cancel-btn">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" draggable="true" data-key="cardMonthlyProfit">
+        <div class="drag-handle">☰</div>
+        <h3 class="title">Monthly Profit</h3>
+        <p class="big-number count">$--</p>
+        <p class="card-description desc">
+          Estimated profit from closed deals this month.
+        </p>
+        <div class="edit-fields">
+          <input type="text" class="edit-title" placeholder="Title" />
+          <input type="text" class="edit-count" placeholder="Count ($)" />
+          <input type="text" class="edit-desc" placeholder="Description" />
+          <div class="save-cancel-row">
+            <button class="save-btn">Save</button>
+            <button class="cancel-btn">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" draggable="true" data-key="cardSMSCampaigns">
+        <div class="drag-handle">☰</div>
+        <h3 class="title">SMS Campaigns</h3>
+        <p class="big-number count">--</p>
+        <p class="card-description desc">
+          Number of SMS campaigns you’ve run.
+        </p>
+        <div class="edit-fields">
+          <input type="text" class="edit-title" placeholder="Title" />
+          <input type="text" class="edit-count" placeholder="Count" />
+          <input type="text" class="edit-desc" placeholder="Description" />
+          <div class="save-cancel-row">
+            <button class="save-btn">Save</button>
+            <button class="cancel-btn">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" draggable="true" data-key="cardCallsMade">
+        <div class="drag-handle">☰</div>
+        <h3 class="title">Calls Made</h3>
+        <p class="big-number count">--</p>
+        <p class="card-description desc">
+          Number of outbound phone calls logged.
+        </p>
+        <div class="edit-fields">
+          <input type="text" class="edit-title" placeholder="Title" />
+          <input type="text" class="edit-count" placeholder="Count" />
+          <input type="text" class="edit-desc" placeholder="Description" />
+          <div class="save-cancel-row">
+            <button class="save-btn">Save</button>
+            <button class="cancel-btn">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" draggable="true" data-key="cardActiveOffers">
+        <div class="drag-handle">☰</div>
+        <h3 class="title">Active Offers</h3>
+        <p class="big-number count">--</p>
+        <p class="card-description desc">
+          Currently active purchase offers.
+        </p>
+        <div class="edit-fields">
+          <input type="text" class="edit-title" placeholder="Title" />
+          <input type="text" class="edit-count" placeholder="Count" />
+          <input type="text" class="edit-desc" placeholder="Description" />
+          <div class="save-cancel-row">
+            <button class="save-btn">Save</button>
+            <button class="cancel-btn">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHART SECTION -->
+    <div class="chart-section">
+      <h2 id="chartTitle">Monthly Deals & Profit Trend</h2>
+      <button class="chart-edit-btn" id="chartEditBtn">Edit Chart</button>
+
+      <div class="chart-container">
+        <canvas id="myDashboardChart"></canvas>
+      </div>
+
+      <form id="chartEditForm" class="chart-edit-form">
+        <div class="field">
+          <label for="chartTitleInput">Chart Title</label>
+          <input type="text" id="chartTitleInput" />
+        </div>
+
+        <h3>Data Points</h3>
+        <div id="chartDataRows">
+          <!-- We'll fill each row with [month, deals, profit] fields -->
+        </div>
+        <button type="button" class="add-data-btn" id="addDataBtn">+ Add Data Point</button>
+        <br>
+        <button type="submit" class="save-btn">Save Chart</button>
+      </form>
+    </div>
+
+    <!-- NOTES & PIPELINE -->
+    <div class="notes-area">
+      <!-- Notes / To-Do -->
+      <div>
+        <h2>Notes &amp; To-Do</h2>
+        <form id="notesForm" class="notes-form">
+          <textarea id="noteInput" placeholder="Write your note or to-do here..." rows="3"></textarea>
+          <button type="submit">Add Note</button>
+        </form>
+        <ul id="notesList" class="notes-list"></ul>
+      </div>
+
+      <!-- Pipeline Snapshot -->
+      <div>
+        <h2>Pipeline Snapshot</h2>
+        <table class="pipeline-table">
+          <thead>
+            <tr>
+              <th>Stage</th>
+              <th>Count</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody id="pipelineBody"></tbody>
+        </table>
+        <button class="pipeline-edit-btn" id="pipelineEditBtn">Edit Pipeline</button>
+
+        <form id="pipelineEditForm" class="pipeline-edit-form">
+          <div id="pipelineEditContainer"></div>
+          <button type="button" class="add-pipeline-btn" id="addPipelineRowBtn">+ Add Row</button>
+          <button type="submit" class="save-pipeline-btn">Save Pipeline</button>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    /* 1) SIDEBAR TOGGLE (Mobile) */
+    const sidebar = document.getElementById('sidebar');
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    sidebarToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('sidebar-open');
+    });
+
+    /* 2) EDIT MODE BUTTON */
+    const body = document.body;
+    const editModeBtn = document.getElementById('toggleEditModeBtn');
+    let editMode = false;
+    editModeBtn.addEventListener('click', () => {
+      editMode = !editMode;
+      body.classList.toggle('edit-mode', editMode);
+      editModeBtn.textContent = editMode ? "Disable Edit Mode" : "Enable Edit Mode";
+    });
+
+    /* The rest is the same advanced logic from the previous snippet: 
+       - Card drag-and-drop
+       - Card inline editing
+       - Chart editing
+       - Notes
+       - Pipeline
+       - And storing everything in localStorage 
+    */
+
+    // 3) DRAG-AND-DROP CARDS
+    const cardsContainer = document.getElementById('cardsContainer');
+    let dragSrcEl = null;
+
+    function getCardOrder() {
+      const orderStr = localStorage.getItem('cardOrder');
+      return orderStr ? JSON.parse(orderStr) : [];
+    }
+    function saveCardOrder(order) {
+      localStorage.setItem('cardOrder', JSON.stringify(order));
+    }
+    function applyCardOrder() {
+      const order = getCardOrder();
+      if (order.length) {
+        order.forEach(key => {
+          const card = cardsContainer.querySelector(`[data-key="${key}"]`);
+          if (card) {
+            cardsContainer.appendChild(card);
+          }
+        });
+      }
+    }
+    applyCardOrder();
+
+    document.querySelectorAll('.card').forEach(card => {
+      card.addEventListener('dragstart', handleDragStart);
+      card.addEventListener('dragover',  handleDragOver);
+      card.addEventListener('dragleave', handleDragLeave);
+      card.addEventListener('drop',      handleDrop);
+      card.addEventListener('dragend',   handleDragEnd);
+    });
+
+    function handleDragStart(e) {
+      if (!editMode) {
+        e.preventDefault(); 
+        return;
+      }
+      dragSrcEl = this;
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', this.dataset.key);
+      this.classList.add('drag-over');
+    }
+    function handleDragOver(e) {
+      if (!editMode) return;
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      this.classList.add('drag-over');
+    }
+    function handleDragLeave(e) {
+      this.classList.remove('drag-over');
+    }
+    function handleDrop(e) {
+      if (!editMode) return;
+      e.preventDefault();
+      this.classList.remove('drag-over');
+      const droppedKey = e.dataTransfer.getData('text/plain');
+      const dropTarget = this;
+
+      if (dropTarget !== dragSrcEl) {
+        const srcIndex    = Array.from(cardsContainer.children).indexOf(dragSrcEl);
+        const targetIndex = Array.from(cardsContainer.children).indexOf(dropTarget);
+
+        if (srcIndex < targetIndex) {
+          cardsContainer.insertBefore(dragSrcEl, dropTarget.nextSibling);
+        } else {
+          cardsContainer.insertBefore(dragSrcEl, dropTarget);
+        }
+        updateCardOrderInStorage();
+      }
+    }
+    function handleDragEnd(e) {
+      this.classList.remove('drag-over');
+    }
+    function updateCardOrderInStorage() {
+      const keys = Array.from(cardsContainer.children).map(card => card.dataset.key);
+      saveCardOrder(keys);
+    }
+
+    // 4) CARD INLINE EDIT
+    function loadCardCustomization(key) {
+      const stored = localStorage.getItem(key);
+      return stored ? JSON.parse(stored) : null;
+    }
+    function saveCardCustomization(key, obj) {
+      localStorage.setItem(key, JSON.stringify(obj));
+    }
+
+    document.querySelectorAll('.card').forEach(card => {
+      const key = card.dataset.key;
+      const titleEl = card.querySelector('.title');
+      const countEl = card.querySelector('.count');
+      const descEl  = card.querySelector('.desc');
+      const editFields = card.querySelector('.edit-fields');
+      const inputTitle = editFields.querySelector('.edit-title');
+      const inputCount = editFields.querySelector('.edit-count');
+      const inputDesc  = editFields.querySelector('.edit-desc');
+      const saveBtn    = editFields.querySelector('.save-btn');
+      const cancelBtn  = editFields.querySelector('.cancel-btn');
+
+      // Load from localStorage
+      const data = loadCardCustomization(key);
+      if (data) {
+        if (data.title)  titleEl.textContent = data.title;
+        if (typeof data.count !== 'undefined') countEl.textContent = data.count;
+        if (data.desc)   descEl.textContent  = data.desc;
+      }
+
+      // Click the card to open the editor (only in editMode, ignoring drag-handle area)
+      card.addEventListener('click', (e) => {
+        if (!editMode) return;
+        if (!e.target.classList.contains('drag-handle') && 
+            !editFields.contains(e.target)) {
+          // Populate
+          inputTitle.value = titleEl.textContent;
+          inputCount.value = countEl.textContent.replace('$','');
+          inputDesc.value  = descEl.textContent;
+          editFields.style.display = 'flex';
+        }
+      });
+
+      cancelBtn.addEventListener('click', (evt) => {
+        evt.stopPropagation();
+        editFields.style.display = 'none';
+      });
+      saveBtn.addEventListener('click', (evt) => {
+        evt.stopPropagation();
+        const newTitle = inputTitle.value.trim() || 'Untitled';
+        let newCount   = inputCount.value.trim() || '0';
+        const newDesc  = inputDesc.value.trim();
+
+        if (key === 'cardMonthlyProfit' && !newCount.startsWith('$')) {
+          newCount = '$' + newCount;
+        }
+        titleEl.textContent = newTitle;
+        countEl.textContent = newCount;
+        descEl.textContent  = newDesc;
+
+        saveCardCustomization(key, { title: newTitle, count: newCount, desc: newDesc });
+        editFields.style.display = 'none';
+      });
+    });
+
+    // 5) CHART
+    let chartInstance;
+    const chartTitleEl   = document.getElementById('chartTitle');
+    const chartEditBtn   = document.getElementById('chartEditBtn');
+    const chartEditForm  = document.getElementById('chartEditForm');
+    const chartTitleInput= document.getElementById('chartTitleInput');
+    const chartDataRows  = document.getElementById('chartDataRows');
+    const addDataBtn     = document.getElementById('addDataBtn');
+    const myChartCanvas  = document.getElementById('myDashboardChart');
+
+    function loadChartData() {
+      const stored = localStorage.getItem('dashboardChartData');
+      if (stored) {
+        return JSON.parse(stored);
+      }
+      // default
+      return {
+        title: "Monthly Deals & Profit Trend",
+        data: [
+          { month: 'Jan', deals: 3,  profit: 15000 },
+          { month: 'Feb', deals: 5,  profit: 23000 },
+          { month: 'Mar', deals: 2,  profit: 10000 },
+          { month: 'Apr', deals: 6,  profit: 35000 },
+          { month: 'May', deals: 4,  profit: 20000 },
+          { month: 'Jun', deals: 7,  profit: 40000 }
+        ]
+      };
+    }
+    function saveChartData(chartObj) {
+      localStorage.setItem('dashboardChartData', JSON.stringify(chartObj));
+    }
+    let chartDataObj = loadChartData();
+
+    function renderChart() {
+      if (chartInstance) {
+        chartInstance.destroy();
+      }
+      chartTitleEl.textContent = chartDataObj.title;
+      const labels = chartDataObj.data.map(d => d.month);
+      const deals  = chartDataObj.data.map(d => d.deals);
+      const profit = chartDataObj.data.map(d => d.profit);
+
+      chartInstance = new Chart(myChartCanvas, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [
+            {
+              label: 'Deals Closed',
+              data: deals,
+              borderColor: 'rgba(75,192,192,1)',
+              backgroundColor: 'rgba(75,192,192,0.2)',
+              yAxisID: 'y1'
+            },
+            {
+              label: 'Profit ($)',
+              data: profit,
+              borderColor: 'rgba(255,99,132,1)',
+              backgroundColor: 'rgba(255,99,132,0.2)',
+              yAxisID: 'y2'
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y1: {
+              type: 'linear',
+              position: 'left',
+              title: { display: true, text: 'Deals' },
+              suggestedMin: 0
+            },
+            y2: {
+              type: 'linear',
+              position: 'right',
+              title: { display: true, text: 'Profit ($)' },
+              suggestedMin: 0,
+              grid: { drawOnChartArea: false }
+            }
+          }
+        }
+      });
+    }
+    renderChart();
+
+    chartEditBtn.addEventListener('click', () => {
+      if (!editMode) return;
+      chartEditForm.style.display = (chartEditForm.style.display === 'block') ? 'none' : 'block';
+      chartTitleInput.value = chartDataObj.title || "";
+      renderChartEditRows();
+    });
+    function renderChartEditRows() {
+      chartDataRows.innerHTML = "";
+      chartDataObj.data.forEach((pt, idx) => {
+        const div = document.createElement('div');
+        div.classList.add('chart-data-row');
+        div.innerHTML = `
+          <input type="text" class="monthField" value="${pt.month}" style="width:80px" />
+          <input type="number" class="dealsField" value="${pt.deals}" style="width:60px" />
+          <input type="number" class="profitField" value="${pt.profit}" style="width:80px" />
+          <button type="button" class="remove-data-btn" data-idx="${idx}">x</button>
+        `;
+        chartDataRows.appendChild(div);
+      });
+      // remove row
+      chartDataRows.querySelectorAll('.remove-data-btn').forEach(btn => {
+        btn.addEventListener('click', e => {
+          const index = +e.target.getAttribute('data-idx');
+          chartDataObj.data.splice(index, 1);
+          renderChartEditRows();
+        });
+      });
+    }
+    addDataBtn.addEventListener('click', () => {
+      chartDataObj.data.push({ month: "New", deals: 0, profit: 0 });
+      renderChartEditRows();
+    });
+    chartEditForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      chartDataObj.title = chartTitleInput.value.trim() || "Monthly Deals & Profit Trend";
+
+      const rowDivs = chartDataRows.querySelectorAll('.chart-data-row');
+      chartDataObj.data = Array.from(rowDivs).map(div => {
+        const month  = div.querySelector('.monthField').value;
+        const deals  = +div.querySelector('.dealsField').value;
+        const profit = +div.querySelector('.profitField').value;
+        return { month, deals, profit };
+      });
+      saveChartData(chartDataObj);
+      renderChart();
+      chartEditForm.style.display = 'none';
+    });
+
+    // 6) NOTES
+    const notesForm = document.getElementById('notesForm');
+    const noteInput = document.getElementById('noteInput');
+    const notesList = document.getElementById('notesList');
+    let notesArray = JSON.parse(localStorage.getItem('dashboardNotes') || '[]');
+
+    function renderNotes() {
+      notesList.innerHTML = "";
+      notesArray.forEach((note, idx) => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <span>${note.text}</span>
+          <button class="remove-note-btn" data-index="${idx}">Remove</button>
+        `;
+        notesList.prepend(li);
+      });
+      document.querySelectorAll('.remove-note-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const i = btn.getAttribute('data-index');
+          notesArray.splice(i, 1);
+          localStorage.setItem('dashboardNotes', JSON.stringify(notesArray));
+          renderNotes();
+        });
+      });
+    }
+    renderNotes();
+
+    notesForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const text = noteInput.value.trim();
+      if (text) {
+        notesArray.push({ text });
+        localStorage.setItem('dashboardNotes', JSON.stringify(notesArray));
+        renderNotes();
+        noteInput.value = "";
+      }
+    });
+
+    // 7) PIPELINE
+    const pipelineBody = document.getElementById('pipelineBody');
+    let pipelineData = JSON.parse(localStorage.getItem('pipelineData') || '[]');
+    if (!pipelineData.length) {
+      pipelineData = [
+        { stage: "New", count: 0, notes: "Need initial contact" },
+        { stage: "Contacted", count: 0, notes: "In conversation" },
+        { stage: "Negotiating", count: 0, notes: "Working final terms" },
+        { stage: "Under Contract", count: 0, notes: "Pending due diligence" },
+        { stage: "Closed", count: 0, notes: "Deal completed" }
+      ];
+    }
+    const pipelineEditBtn        = document.getElementById('pipelineEditBtn');
+    const pipelineEditForm       = document.getElementById('pipelineEditForm');
+    const pipelineEditContainer  = document.getElementById('pipelineEditContainer');
+    const addPipelineRowBtn      = document.getElementById('addPipelineRowBtn');
+
+    function renderPipeline() {
+      pipelineBody.innerHTML = "";
+      pipelineData.forEach(item => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td data-label="Stage">${item.stage}</td>
+          <td data-label="Count">${item.count}</td>
+          <td data-label="Notes">${item.notes}</td>
+        `;
+        pipelineBody.appendChild(tr);
+      });
+      localStorage.setItem('pipelineData', JSON.stringify(pipelineData));
+    }
+    renderPipeline();
+
+    pipelineEditBtn.addEventListener('click', () => {
+      if (!editMode) return;
+      pipelineEditForm.style.display = (pipelineEditForm.style.display === 'block') ? 'none' : 'block';
+      renderPipelineEdit();
+    });
+    function renderPipelineEdit() {
+      pipelineEditContainer.innerHTML = "";
+      pipelineData.forEach((row, idx) => {
+        const div = document.createElement('div');
+        div.classList.add('field-row');
+        div.innerHTML = `
+          <input type="text" class="stageField" value="${row.stage}" style="width:100px" />
+          <input type="number" class="countField" value="${row.count}" style="width:60px" />
+          <input type="text" class="notesField" value="${row.notes}" style="width:150px" />
+          <button type="button" class="remove-pipeline-btn" data-idx="${idx}">x</button>
+        `;
+        pipelineEditContainer.appendChild(div);
+      });
+      pipelineEditContainer.querySelectorAll('.remove-pipeline-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const index = +btn.getAttribute('data-idx');
+          pipelineData.splice(index, 1);
+          renderPipelineEdit();
+        });
+      });
+    }
+    addPipelineRowBtn.addEventListener('click', () => {
+      pipelineData.push({ stage: "NewStage", count: 0, notes: "..." });
+      renderPipelineEdit();
+    });
+    pipelineEditForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const rows = pipelineEditContainer.querySelectorAll('.field-row');
+      pipelineData = Array.from(rows).map(div => {
+        const stage = div.querySelector('.stageField').value;
+        const count = +div.querySelector('.countField').value;
+        const notes= div.querySelector('.notesField').value;
+        return { stage, count, notes };
+      });
+      localStorage.setItem('pipelineData', JSON.stringify(pipelineData));
+      pipelineEditForm.style.display = 'none';
+      renderPipeline();
+    });
+
+    // 8) DEMO: set some counts from fake data
+    // (In a real app, you'd load these from a backend or localStorage)
+    document.querySelector('[data-key="cardNewLeads"] .count').textContent      = 5;
+    document.querySelector('[data-key="cardUnderContract"] .count').textContent = 2;
+    document.querySelector('[data-key="cardClosedDeals"] .count').textContent   = 1;
+    document.querySelector('[data-key="cardTotalBuyers"] .count').textContent   = 48;
+    document.querySelector('[data-key="cardMonthlyProfit"] .count').textContent = '$15000';
+    document.querySelector('[data-key="cardSMSCampaigns"] .count').textContent  = 10;
+    document.querySelector('[data-key="cardCallsMade"] .count').textContent     = 34;
+    document.querySelector('[data-key="cardActiveOffers"] .count').textContent  = 3;
+  });
+  </script>
+</body>
+</html>

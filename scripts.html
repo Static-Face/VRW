@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Script Generator - My Wholesaling Hub</title>
+</head>
+<body>
+  <!-- Header -->
+  <header class="app-header">
+    <div class="brand">My Wholesaling Hub</div>
+    <button id="sidebarToggle" class="sidebar-toggle">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </button>
+  </header>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <nav class="nav-menu">
+      <ul>
+        <li><a href="index.html">Dashboard</a></li>
+        <li><a href="leads.html">Leads</a></li>
+        <li><a href="buyers.html">Buyers</a></li>
+        <li><a href="properties.html">Properties</a></li>
+        <li><a href="tools.html">Tools</a></li>
+        <li><a href="scripts.html" class="active">Scripts</a></li>
+        <li><a href="contracts.html">Contracts</a></li>
+        <li><a href="settings.html">Settings</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <h1>Script Generator</h1>
+    <!-- Script Generation Container -->
+    <div class="script-generation-container">
+      <h2>Build Your Custom Scripts</h2>
+      <form id="scriptForm" class="script-form">
+
+        <!-- Row for Your Name & Company -->
+        <div class="form-full-row row-split-2">
+          <div class="field-block">
+            <label for="userName">Your Name:</label>
+            <input 
+              type="text" 
+              id="userName" 
+              placeholder="e.g. John Smith" 
+            />
+          </div>
+          <div class="field-block">
+            <label for="userCompany">Your Company Name:</label>
+            <input 
+              type="text" 
+              id="userCompany" 
+              placeholder="e.g. XYZ Home Buyers" 
+            />
+          </div>
+        </div>
+
+        <!-- Row for Your Phone & Email -->
+        <div class="form-full-row row-split-2">
+          <div class="field-block">
+            <label for="userPhone">Your Phone (optional):</label>
+            <input 
+              type="text" 
+              id="userPhone" 
+              placeholder="e.g. 555-123-4567" 
+            />
+          </div>
+          <div class="field-block">
+            <label for="userEmail">Your Email (optional):</label>
+            <input 
+              type="email" 
+              id="userEmail" 
+              placeholder="e.g. you@company.com" 
+            />
+          </div>
+        </div>
+
+        <!-- Left Column -->
+        <div class="form-column">
+          <label for="contactName">Lead's Name (optional):</label>
+          <input 
+            type="text" 
+            id="contactName" 
+            placeholder="e.g. Mary Johnson, or blank"
+          />
+
+          <label for="propertyAddress">Property Address (optional):</label>
+          <input 
+            type="text" 
+            id="propertyAddress" 
+            placeholder="e.g. 123 Main St (or blank)"
+          />
+
+          <label for="propertyType">Property Type (optional):</label>
+          <select id="propertyType">
+            <option value="" selected>-- Not Specified --</option>
+            <option value="singleFamily">Single-Family</option>
+            <option value="duplex">Duplex</option>
+            <option value="condo">Condo/Townhome</option>
+            <option value="multifamily">Multi-Family</option>
+            <option value="land">Land</option>
+          </select>
+        </div>
+
+        <!-- Right Column -->
+        <div class="form-column">
+          <label for="scenarioSelect">Scenario:</label>
+          <select id="scenarioSelect">
+            <!-- SELLER Scenarios -->
+            <optgroup label="SELLER Scenarios">
+              <option value="sellerEarlyStage">Seller - Early Stage (Just Exploring)</option>
+              <option value="sellerMotivated">Seller - Highly Motivated</option>
+              <option value="sellerMultipleOffers">Seller - Multiple Offers</option>
+              <option value="sellerPreForeclosure">Seller - Pre-Foreclosure</option>
+              <option value="sellerLeaseOption">Seller - Lease Option Inquiry</option>
+            </optgroup>
+            <!-- BUYER Scenarios -->
+            <optgroup label="BUYER Scenarios">
+              <option value="buyerNewInvestor">Buyer - New Investor</option>
+              <option value="buyerEstablishedInvestor">Buyer - Established Investor</option>
+              <option value="buyerRetail">Buyer - Retail Buyer</option>
+              <option value="buyerFinalNegotiation">Buyer - Final Negotiation Stage</option>
+            </optgroup>
+          </select>
+
+          <label for="motivationLevel">Motivation Level (1-10):</label>
+          <input 
+            type="number" 
+            id="motivationLevel" 
+            min="1" 
+            max="10" 
+            value="5"
+          />
+
+          <label for="communicationStyle">Communication Style:</label>
+          <select id="communicationStyle">
+            <option value="friendly" selected>Friendly & Empathetic</option>
+            <option value="professional">Formal & Direct</option>
+            <option value="urgent">Urgent/Scarcity-Based</option>
+          </select>
+        </div>
+
+        <!-- Full Width Row for Follow-Up Method -->
+        <div class="form-full-row">
+          <label for="followUpMethod">Follow-Up Method:</label>
+          <select id="followUpMethod">
+            <option value="threeStrike" selected>3-Strike Method (3 scripts)</option>
+            <option value="fiveStep">5-Step Drip Follow-Up (5 scripts)</option>
+            <option value="oneAndDone">One-and-Done Outreach (1 script)</option>
+            <option value="nurtureApproach">Long-Term Nurture (2 scripts)</option>
+            <option value="sevenDayBlitz">7-Day Blitz (7 scripts)</option>
+          </select>
+        </div>
+
+        <div class="form-full-row">
+          <button type="submit" id="generateScriptBtn">
+            Generate Scripts
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Output Scripts -->
+    <div id="scriptsOutput" class="scripts-output" style="display:none;">
+      <h2>Generated Scripts</h2>
+      <p id="methodDescription" class="method-description"></p>
+
+      <!-- Where the scripts will be inserted dynamically -->
+      <div id="scriptResultsContainer"></div>
+    </div>
+  </main>
+
+
+  <!-- =========================
+       CUSTOM CSS
+  ========================== -->
+  <style>
+    /* RESET */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* GLOBAL */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9fafb;
+      color: #333;
+    }
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+    p { 
+      margin-bottom: 10px;
+    }
+
+    /* HEADER */
+    .app-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(135deg, #444, #222);
+      color: #fff;
+      padding: 0.75rem 1rem;
+      height: 60px;
+      z-index: 1000;
+    }
+    .brand {
+      font-size: 1.4rem;
+      font-weight: 600;
+    }
+    .sidebar-toggle {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+    .sidebar-toggle .bar {
+      width: 25px;
+      height: 3px;
+      background-color: #fff;
+      margin: 4px 0;
+      transition: 0.4s;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      background: linear-gradient(135deg, #555, #333);
+      color: #fff;
+      width: 240px;
+      flex-shrink: 0;
+      padding: 1rem;
+      transition: transform 0.3s ease;
+      min-height: calc(100vh - 3.25rem);
+      overflow: auto;
+    }
+    @media (max-width: 768px) {
+      .sidebar {
+        position: fixed;
+        top: 3.25rem;
+        left: 0;
+        height: calc(100vh - 3.25rem);
+        transform: translateX(-250px);
+        z-index: 999;
+      }
+      .sidebar-toggle {
+        display: flex;
+      }
+      .sidebar-open {
+        transform: translateX(0);
+      }
+    }
+    .nav-menu ul {
+      list-style: none;
+      margin-top: 1rem;
+    }
+    .nav-menu ul li {
+      margin: 1rem 0;
+    }
+    .nav-menu ul li a {
+      display: block;
+      padding: 0.5rem 0.75rem;
+      border-radius: 4px;
+      font-weight: 500;
+      transition: background-color 0.2s ease;
+    }
+    .nav-menu ul li a:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+    .nav-menu ul li a.active {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    /* MAIN CONTENT */
+    .main-content {
+      padding: 1.5rem;
+    }
+    @media (max-width: 768px) {
+      .main-content {
+        margin-left: 0;
+      }
+    }
+    @media (min-width: 769px) {
+      .app-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+      }
+      .sidebar {
+        position: fixed;
+        top: 60px;
+        left: 0;
+        bottom: 0;
+        width: 240px;
+        transform: none;
+      }
+      .main-content {
+        margin-left: 240px;
+        margin-top: 60px;
+        width: calc(100% - 240px);
+      }
+    }
+
+    /* PAGE TITLE */
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 0.75rem;
+    }
+    .page-description {
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+      color: #555;
+    }
+    .method-badge {
+      background-color: #007bff;
+      color: #fff;
+      padding: 0.25rem 0.5rem;
+      font-size: 0.85rem;
+      border-radius: 4px;
+    }
+
+    /* SCRIPT GENERATION FORM */
+    .script-generation-container {
+      background: #fff;
+      padding: 1.5rem;
+      border-radius: 6px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      margin-bottom: 1.5rem;
+      transition: box-shadow 0.3s ease;
+    }
+    .script-generation-container:hover {
+      box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+    }
+    .script-generation-container h2 {
+      margin-bottom: 1rem;
+    }
+    .script-form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .form-column {
+      flex: 1;
+      min-width: 230px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .form-full-row {
+      flex-basis: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+    }
+    /* side-by-side row for name & company, phone & email */
+    .row-split-2 {
+      flex-direction: row;
+      gap: 1rem;
+    }
+    .field-block {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    label {
+      font-weight: 600;
+    }
+    input, select {
+      padding: 0.6rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+    #generateScriptBtn {
+      align-self: flex-start;
+      background: linear-gradient(135deg, #28a745, #218838);
+      color: #fff;
+      border: none;
+      padding: 0.7rem 1.2rem;
+      cursor: pointer;
+      border-radius: 4px;
+      font-size: 1rem;
+      transition: background 0.3s;
+    }
+    #generateScriptBtn:hover {
+      background: linear-gradient(135deg, #218838, #18692c);
+    }
+
+    /* OUTPUT SCRIPTS */
+    .scripts-output {
+      background: #fff;
+      padding: 1.5rem;
+      border-radius: 6px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .scripts-output h2 {
+      margin-bottom: 0.5rem;
+    }
+    .method-description {
+      margin-bottom: 1rem;
+      font-style: italic;
+      color: #666;
+    }
+    .script-section {
+      margin-top: 1.5rem;
+      /* simple fade-in effect for dynamic content */
+      animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .script-section h3 {
+      margin-bottom: 0.5rem;
+      font-size: 1.15rem;
+      color: #444;
+      border-left: 4px solid #007bff;
+      padding-left: 0.5rem;
+    }
+    .script-box {
+      background: #fafafa;
+      border: 1px solid #ccc;
+      padding: 1rem;
+      border-radius: 4px;
+      margin-bottom: 0.75rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    /* BUTTONS */
+    .btn {
+      display: inline-block;
+      padding: 0.4rem 0.75rem;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+    .copy-btn {
+      background-color: #007bff;
+      color: #fff;
+      margin-bottom: 1rem;
+    }
+    .copy-btn:hover {
+      background-color: #0056b3;
+    }
+  </style>
+
+  <!-- =========================
+       JAVASCRIPT
+  ========================== -->
+  <script>
+    // SIDEBAR TOGGLE LOGIC
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    const sidebar = document.getElementById('sidebar');
+    sidebarToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('sidebar-open');
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // DOM references
+      const scriptForm       = document.getElementById('scriptForm');
+      const scriptsOutput    = document.getElementById('scriptsOutput');
+      const methodDesc       = document.getElementById('methodDescription');
+      const resultsContainer = document.getElementById('scriptResultsContainer');
+
+      // Generate scripts on form submit
+      scriptForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        // Gather form data
+        const userName        = document.getElementById('userName').value.trim()      || "[Your Name]";
+        const userCompany     = document.getElementById('userCompany').value.trim()   || "[Your Company]";
+        const userPhone       = document.getElementById('userPhone').value.trim()     || "";
+        const userEmail       = document.getElementById('userEmail').value.trim()     || "";
+
+        const contactName     = document.getElementById('contactName').value.trim();
+        const propertyAddress = document.getElementById('propertyAddress').value.trim();
+        const propertyType    = document.getElementById('propertyType').value;
+        const scenario        = document.getElementById('scenarioSelect').value;
+        const motivation      = parseInt(document.getElementById('motivationLevel').value) || 5;
+        const style           = document.getElementById('communicationStyle').value;
+        const followUpMethod  = document.getElementById('followUpMethod').value;
+
+        // Clear previous scripts
+        resultsContainer.innerHTML = "";
+
+        // Provide a short description of the chosen method
+        methodDesc.textContent = describeMethod(followUpMethod);
+
+        // Generate the scripts for this method
+        const scriptsArray = generateScriptsForMethod({
+          followUpMethod,
+          userName,
+          userCompany,
+          userPhone,
+          userEmail,
+          contactName,
+          propertyAddress,
+          propertyType,
+          scenario,
+          motivation,
+          style
+        });
+
+        // Populate the results container
+        scriptsArray.forEach(scriptObj => {
+          const section = document.createElement('section');
+          section.classList.add('script-section');
+
+          const h3 = document.createElement('h3');
+          h3.textContent = scriptObj.title;
+          section.appendChild(h3);
+
+          const box = document.createElement('div');
+          box.classList.add('script-box');
+          box.id = scriptObj.boxId;
+          box.innerText = scriptObj.content;
+          section.appendChild(box);
+
+          const copyBtn = document.createElement('button');
+          copyBtn.classList.add('btn', 'copy-btn');
+          copyBtn.setAttribute('data-target', scriptObj.boxId);
+          copyBtn.textContent = "Copy This Script";
+          section.appendChild(copyBtn);
+
+          resultsContainer.appendChild(section);
+        });
+
+        // Show output
+        scriptsOutput.style.display = 'block';
+        window.scrollTo({ top: scriptsOutput.offsetTop, behavior: 'smooth' });
+
+        // Re-bind copy button events
+        document.querySelectorAll('.copy-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const targetId   = btn.getAttribute('data-target');
+            const targetDiv  = document.getElementById(targetId);
+            if (!targetDiv) return;
+            const textToCopy = targetDiv.innerText.trim();
+
+            if (navigator.clipboard && window.isSecureContext) {
+              navigator.clipboard.writeText(textToCopy)
+                .then(() => alert("Script copied to clipboard!"))
+                .catch(err => console.error("Failed to copy text:", err));
+            } else {
+              // Fallback
+              const textArea = document.createElement('textarea');
+              textArea.value = textToCopy;
+              document.body.appendChild(textArea);
+              textArea.select();
+              try {
+                document.execCommand('copy');
+                alert("Script copied to clipboard!");
+              } catch (err) {
+                console.error("Fallback: Oops, unable to copy", err);
+              }
+              document.body.removeChild(textArea);
+            }
+          });
+        });
+      });
+
+      /**
+       * Generate scripts for the chosen method
+       */
+      function generateScriptsForMethod(opts) {
+        switch (opts.followUpMethod) {
+          case "threeStrike":
+            return generateThreeStrike(opts);
+          case "fiveStep":
+            return generateFiveStep(opts);
+          case "oneAndDone":
+            return generateOneAndDone(opts);
+          case "nurtureApproach":
+            return generateNurtureApproach(opts);
+          case "sevenDayBlitz":
+            return generate7DayBlitz(opts);
+          default:
+            return [{
+              title: "Undefined Method",
+              content: "No scripts generated—unrecognized method.",
+              boxId: "undefinedMethod"
+            }];
+        }
+      }
+
+      // 3-Strike => 3 scripts
+      function generateThreeStrike(options) {
+        return [
+          {
+            title: "Strike 1: Call Script",
+            content: generateCallScript(options),
+            boxId: "strike1Call"
+          },
+          {
+            title: "Strike 2: Voice Note Script",
+            content: generateVoiceNoteScript(options),
+            boxId: "strike2Voice"
+          },
+          {
+            title: "Strike 3: Message Script",
+            content: generateMessageScript(options),
+            boxId: "strike3Message"
+          }
+        ];
+      }
+
+      // 5-Step => 5 short scripts
+      function generateFiveStep(options) {
+        return [
+          {
+            title: "Step 1: Intro Outreach",
+            content: generateCallScript(options),
+            boxId: "fiveStep1"
+          },
+          {
+            title: "Step 2: Gentle Follow-Up",
+            content: generateShortFollowUp(options, 2),
+            boxId: "fiveStep2"
+          },
+          {
+            title: "Step 3: Another Touchpoint",
+            content: generateShortFollowUp(options, 3),
+            boxId: "fiveStep3"
+          },
+          {
+            title: "Step 4: Urgent Attempt",
+            content: generateShortFollowUp(options, 4),
+            boxId: "fiveStep4"
+          },
+          {
+            title: "Step 5: Final Check-In",
+            content: generateShortFollowUp(options, 5),
+            boxId: "fiveStep5"
+          }
+        ];
+      }
+
+      // One-and-Done => 1 script
+      function generateOneAndDone(options) {
+        return [
+          {
+            title: "One-and-Done Outreach Script",
+            content: generateOneShotScript(options),
+            boxId: "oneAndDoneBox"
+          }
+        ];
+      }
+
+      // Nurture => 2 scripts
+      function generateNurtureApproach(options) {
+        return [
+          {
+            title: "Nurture: Initial Consultative Reach",
+            content: generateNurtureInitial(options),
+            boxId: "nurtureInitial"
+          },
+          {
+            title: "Nurture: Ongoing Monthly Follow-Up",
+            content: generateNurtureFollowUp(options),
+            boxId: "nurtureMonthly"
+          }
+        ];
+      }
+
+      // 7-Day Blitz => 7 daily scripts
+      function generate7DayBlitz(options) {
+        const result = [];
+        for (let day = 1; day <= 7; day++) {
+          result.push({
+            title: `Day ${day} Follow-Up`,
+            content: generate7DayScript(options, day),
+            boxId: `sevenDayBlitzDay${day}`
+          });
+        }
+        return result;
+      }
+
+      // For the 7-day Blitz, we might do something short each day
+      function generate7DayScript(opts, day) {
+        const scn   = scenarioLines(opts.scenario);
+        const greet = styleGreeting(opts.style);
+        const motive= motivationLine(opts.motivation, opts.style, opts.scenario);
+
+        // Mix up the lines day by day for variety
+        switch(day) {
+          case 1: 
+            return `${greet} there! Day 1 of reaching out. ${scn.callIntro}
+${motive}
+${scn.callBody}
+\nLet's connect soon to see if we can make this work for you.`;
+          case 2:
+            return `Day 2 here—just a quick check. ${scn.voiceIntro}
+We don't want to miss any opportunity if you're still open to it.
+${motive}`;
+          case 3:
+            return `Day 3 follow-up: 
+Are there new questions about ${scn.msgIntro.replace("{{address}}", "the property")}?
+${motive}
+${scn.msgBody}`;
+          case 4:
+            return `Day 4 check-in: 
+We usually see progress by now if folks are serious about moving forward.
+${motive}
+Let me know if you'd like to talk numbers or timeline.`;
+          case 5:
+            return `Day 5: I'm ramping up my attempts so we don't let a great chance slip by.
+${scn.callBody}
+${motive}`;
+          case 6:
+            return `Day 6: Almost a week since we first connected.
+${scn.voiceIntro}
+If you've changed your mind, just let me know—no hard feelings.`;
+          case 7:
+            return `Final Day 7: 
+This is my last attempt for now. If you'd like to proceed, I'd love to help. 
+If not, I'll respect your space. 
+${motive}`;
+          default:
+            return `Generic: Another day, another check-in. Let me know if you need info.`;
+        }
+      }
+
+      /**
+       * Method descriptions
+       */
+      function describeMethod(method) {
+        switch (method) {
+          case "threeStrike":
+            return "Three-Strike Method: 3 outreach attempts (Call, Voice Note, Message) in quick succession.";
+          case "fiveStep":
+            return "5-Step Drip: Gradual follow-up over time—short but strategic touches.";
+          case "oneAndDone":
+            return "One-and-Done: A single comprehensive outreach—ideal for lower priorities or broad campaigns.";
+          case "nurtureApproach":
+            return "Long-Term Nurture: A consultative initial reach + ongoing monthly check-ins.";
+          case "sevenDayBlitz":
+            return "7-Day Blitz: Intense daily follow-ups for a week—ensuring no missed opportunities.";
+          default:
+            return "";
+        }
+      }
+
+      /**
+       * Script Building Blocks
+       */
+      function generateCallScript(opts) {
+        const scn         = scenarioLines(opts.scenario);
+        const addressPart = buildAddressPart(opts.propertyAddress, opts.propertyType);
+        const greet       = styleGreeting(opts.style);
+        const motive      = motivationLine(opts.motivation, opts.style, opts.scenario);
+
+        return `${greet} ${opts.contactName || "there"}, this is ${opts.userName} with ${opts.userCompany}.
+I'm calling ${addressPart} because ${scn.callIntro}
+
+${motive}
+${scn.callBody}
+
+${scn.callClose}
+\n${appendContactInfo(opts)}`;
+      }
+
+      function generateVoiceNoteScript(opts) {
+        const scn         = scenarioLines(opts.scenario);
+        const addressPart = buildAddressPart(opts.propertyAddress, opts.propertyType, true);
+        const greet       = styleGreeting(opts.style);
+
+        return `${greet} ${opts.contactName || "there"}, this is ${opts.userName} with ${opts.userCompany}.
+I just tried giving you a call ${addressPart}.
+${scn.voiceIntro}
+
+Feel free to call or text me back at ${opts.userPhone || "[Your Phone Number]"}. 
+${appendContactInfo(opts)}`;
+      }
+
+      function generateMessageScript(opts) {
+        const scn         = scenarioLines(opts.scenario);
+        const addressPart = buildAddressPart(opts.propertyAddress, opts.propertyType, false, true);
+        const signOff     = styleSignOff(opts.style);
+        const motive      = motivationLine(opts.motivation, opts.style, opts.scenario);
+
+        return `Hey ${opts.contactName || "there"},
+
+${scn.msgIntro.replace("{{address}}", addressPart)}
+${motive}
+
+${scn.msgBody}
+
+${signOff}
+
+${appendContactInfo(opts)}`;
+      }
+
+      // For 5-step short follow-ups
+      function generateShortFollowUp(opts, step) {
+        const greet = styleGreeting(opts.style);
+        const scn   = scenarioLines(opts.scenario);
+
+        switch (step) {
+          case 2:
+            return `${greet} again—Step 2 follow-up! Just checking if there's any update or question. ${scn.voiceIntro}
+\n${appendContactInfo(opts)}`;
+          case 3:
+            return `Step 3: Another quick touch! Making sure we haven't missed each other. Let me know if you'd like more info.
+\n${appendContactInfo(opts)}`;
+          case 4:
+            return `Step 4: I'm concerned we might let a good opportunity slip away. Please let me know if you'd like more details.
+\n${appendContactInfo(opts)}`;
+          case 5:
+            return `Step 5: Final check-in for this drip. I'll respect your space if not interested, but I'd hate for you to miss out if timing matters.
+\n${appendContactInfo(opts)}`;
+          default:
+            return `Quick note: I'm here if you need me—no pressure.\n${appendContactInfo(opts)}`;
+        }
+      }
+
+      // One-and-Done
+      function generateOneShotScript(opts) {
+        const scn         = scenarioLines(opts.scenario);
+        const greet       = styleGreeting(opts.style);
+        const addressPart = buildAddressPart(opts.propertyAddress, opts.propertyType);
+        const motive      = motivationLine(opts.motivation, opts.style, opts.scenario);
+        const signOff     = styleSignOff(opts.style);
+
+        return `${greet} ${opts.contactName || "there"}, this is ${opts.userName} with ${opts.userCompany}.
+I'm reaching out ${addressPart} because ${scn.callIntro}
+
+${motive}
+${scn.callBody}
+
+If we can't connect by phone, consider this my text/email follow-up too:
+${scn.msgIntro.replace("{{address}}", addressPart)}
+
+${scn.msgBody}
+
+${signOff}
+
+${appendContactInfo(opts)}`;
+      }
+
+      // Nurture approach
+      function generateNurtureInitial(opts) {
+        const scn         = scenarioLines(opts.scenario);
+        const greet       = styleGreeting(opts.style);
+        const addressPart = buildAddressPart(opts.propertyAddress, opts.propertyType);
+        const motive      = motivationLine(opts.motivation, opts.style, opts.scenario);
+
+        return `${greet} ${opts.contactName || "there"}, this is ${opts.userName} with ${opts.userCompany}.
+I'd love to learn more ${addressPart} and see how we can help. ${scn.callIntro}
+
+${motive}
+${scn.callBody}
+
+No rush—this is about understanding your goals. I'll follow up monthly to see how you're doing.
+\n${appendContactInfo(opts)}`;
+      }
+
+      function generateNurtureFollowUp(opts) {
+        const greet = styleGreeting(opts.style);
+        const scn   = scenarioLines(opts.scenario);
+
+        return `${greet} ${opts.contactName || "there"}, it's ${opts.userName} from ${opts.userCompany} checking in again.
+How are things going since we last spoke?
+
+${scn.voiceIntro}
+If the timing's right, I'd love to revisit any ideas we had before. If not, no worries—just staying in touch.
+\n${appendContactInfo(opts)}`;
+      }
+
+      /**
+       * HELPER: Build address part
+       */
+      function buildAddressPart(address, propType, short = false, isMsg = false) {
+        // short means we might say "about your property at X" or "about property at X"
+        // isMsg means we might say "the property at X" 
+        let base = isMsg ? "the property" : "about the property";
+        if (short) base = "about your property";
+
+        let result = address 
+          ? `${base} at ${address}` 
+          : `${base}`;
+        if (propType) {
+          result += ` (${formatPropType(propType)})`;
+        }
+        return result;
+      }
+
+      /**
+       * HELPER: Append contact info
+       */
+      function appendContactInfo({ userName, userCompany, userPhone, userEmail }) {
+        // Build lines if phone/email exist
+        let result = `- ${userName}, ${userCompany}`;
+
+        // If phone exists, append
+        if (userPhone) {
+          result += `\nPhone: ${userPhone}`;
+        }
+        // If email exists, append
+        if (userEmail) {
+          result += `\nEmail: ${userEmail}`;
+        }
+        return result;
+      }
+
+      /**
+       * Scenario lines
+       */
+      function scenarioLines(scenario) {
+        const lines = {
+          sellerEarlyStage: {
+            callIntro:  "you might be considering selling, but you’re still in the early stages.",
+            callBody:   "We specialize in simple, no-obligation offers that help you understand your options.",
+            callClose:  "Would you like to chat about next steps, or prefer more info first?",
+            voiceIntro: "I recall you're just exploring the possibility—any new questions?",
+            msgIntro:   "Just checking in on how you feel about selling {{address}}. Still gathering info?",
+            msgBody:    "No rush—I'm happy to help once you're ready."
+          },
+          sellerMotivated: {
+            callIntro:  "you’re quite motivated to sell soon and want a hassle-free process.",
+            callBody:   "We can offer quick closings, cover standard costs, and align with your timeline.",
+            callClose:  "Does that sound like something you'd want to move forward with now?",
+            voiceIntro: "Time is critical, so I wanted to ensure we’re not missing an ideal window.",
+            msgIntro:   "Checking in to expedite the sale of {{address}}—I know you want to close ASAP.",
+            msgBody:    "Our process is straightforward. Ready to discuss an offer?"
+          },
+          sellerMultipleOffers: {
+            callIntro:  "I heard you might be juggling multiple offers already.",
+            callBody:   "We focus on transparency and speed—sometimes the top-dollar offer has hidden catches.",
+            callClose:  "Need details on how we handle costs and timelines so you can compare effectively?",
+            voiceIntro: "I know you have multiple offers—here’s what sets ours apart.",
+            msgIntro:   "I respect that you want the best outcome for {{address}}, not just the highest offer.",
+            msgBody:    "Let me know if you’d like a quick breakdown of how our offer stands out."
+          },
+          sellerPreForeclosure: {
+            callIntro:  "you may be facing pre-foreclosure and need a faster sale.",
+            callBody:   "We can help avoid foreclosure by closing quickly and covering key expenses.",
+            callClose:  "Ready to talk about preserving equity and protecting your credit?",
+            voiceIntro: "Acting fast might help you avoid the worst consequences of foreclosure.",
+            msgIntro:   "We can help you avoid foreclosure on {{address}}—timing is key.",
+            msgBody:    "We handle quick closings and can coordinate with the bank’s requirements."
+          },
+          sellerLeaseOption: {
+            callIntro:  "you’re considering a lease-option or rent-to-own scenario.",
+            callBody:   "We can structure a win-win, giving you steady income and eventually purchasing outright.",
+            callClose:  "Let me know if you’d like more details about lease-option terms.",
+            voiceIntro: "Wanted to share how our lease-option process can be a good fit.",
+            msgIntro:   "Following up about the lease option possibility for {{address}}.",
+            msgBody:    "Happy to give more info—no obligation, just clarity."
+          },
+          buyerNewInvestor: {
+            callIntro:  "you’re a new investor looking for your first or second deal.",
+            callBody:   "We break down rehab costs, ARV, and can connect you with financing. Very supportive process.",
+            callClose:  "Want to see current deals that fit a new investor profile?",
+            voiceIntro: "Checking if you’re still aiming for that first investment with good returns.",
+            msgIntro:   "Touching base to help you find that perfect starter deal—{{address}} might fit.",
+            msgBody:    "Let me know if you need info on financing or strategy."
+          },
+          buyerEstablishedInvestor: {
+            callIntro:  "you’re a seasoned investor expanding your portfolio.",
+            callBody:   "We have off-market properties with strong cash flow and transparent numbers.",
+            callClose:  "Interested in seeing deals before they go public?",
+            voiceIntro: "Highlighting a few off-market deals that might align with your strategy.",
+            msgIntro:   "Reaching out if you’re open to new acquisitions—{{address}} might fit your goals.",
+            msgBody:    "Let me know if you'd like a curated list of our best deals right now."
+          },
+          buyerRetail: {
+            callIntro:  "you’re looking for a home to live in, not just an investment.",
+            callBody:   "We can show you move-in ready properties or minimal-fix options, plus financing resources if needed.",
+            callClose:  "Want to discuss your ideal home criteria?",
+            voiceIntro: "Checking if you’re still searching for the right home—maybe we have a perfect fit.",
+            msgIntro:   "I can help you find a home that suits your lifestyle—{{address}} might be an option.",
+            msgBody:    "Let me know if you’d like more info or want to talk about your criteria."
+          },
+          buyerFinalNegotiation: {
+            callIntro:  "you’re in the final negotiation stage on a property.",
+            callBody:   "We want to confirm numbers and timeline so you can close and start seeing returns quickly.",
+            callClose:  "Any last questions or concerns before we finalize?",
+            voiceIntro: "Wanted to confirm you’re okay with the final terms—ready to finalize?",
+            msgIntro:   "We're near the finish line on {{address}}. Are we all set?",
+            msgBody:    "If so, let's sign and close. Let me know if you have last-minute questions."
+          }
+        };
+
+        return lines[scenario] || {
+          callIntro:  "you're exploring an unspecified scenario.",
+          callBody:   "We can figure out the best approach if you share more details.",
+          callClose:  "Is this something you'd like to talk more about?",
+          voiceIntro: "I'd love to connect when you have a moment.",
+          msgIntro:   "Reaching out about a scenario you mentioned, but details were limited.",
+          msgBody:    "Let me know what you have in mind—happy to help."
+        };
+      }
+
+      /**
+       * HELPER: Greetings & Sign-offs
+       */
+      function styleGreeting(style) {
+        if (style === 'professional') return "Good day";
+        if (style === 'urgent')       return "Hi";
+        return "Hey"; // friendly default
+      }
+
+      function styleSignOff(style) {
+        if (style === 'professional') return "Thank you. I look forward to your response.";
+        if (style === 'urgent')       return "Please let me know ASAP—time is of the essence!";
+        return "Thanks, talk soon!"; // friendly
+      }
+
+      function motivationLine(motivation, style, scenario) {
+        let line = "";
+        if (motivation >= 8) {
+          line = "I know you’re highly motivated—acting quickly can secure the best outcome.";
+        } else if (motivation <= 3) {
+          line = "I realize you might be testing the waters, so no pressure.";
+        } else {
+          line = "I sense you're somewhat interested, so I’m here to clarify any concerns.";
+        }
+        if (style === 'urgent') {
+          line += " The market moves fast, so a prompt decision can be very beneficial.";
+        }
+        return line;
+      }
+
+      function formatPropType(pt) {
+        switch(pt) {
+          case "singleFamily": return "Single-Family";
+          case "duplex":       return "Duplex";
+          case "condo":        return "Condo/Townhome";
+          case "multifamily":  return "Multi-Family";
+          case "land":         return "Land";
+          default:             return "";
+        }
+      }
+    });
+  </script>
+</body>
+</html>

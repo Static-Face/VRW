@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Advanced Contracts Wizard - My Wholesaling Hub</title>
+
+  <!-- 
+    Include html2pdf.js via CDN so we can generate PDFs client-side.
+    (https://github.com/eKoopmans/html2pdf.js) 
+  -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+  <!-- Header -->
+  <header class="app-header">
+    <div class="brand">
+      <span>My Wholesaling Hub</span>
+    </div>
+    <!-- The 3-line (hamburger) button -->
+    <button id="sidebarToggle" class="sidebar-toggle">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </button>
+  </header>
+
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar" id="sidebar">
+    <nav class="nav-menu">
+      <ul>
+        <li><a href="index.html">Dashboard</a></li>
+        <li><a href="leads.html">Leads</a></li>
+        <li><a href="buyers.html">Buyers</a></li>
+        <li><a href="properties.html">Properties</a></li>
+        <li><a href="tools.html">Tools</a></li>
+        <li><a href="scripts.html">Scripts</a></li>
+        <li><a href="contracts.html" class="active">Contracts</a></li>
+        <li><a href="settings.html">Settings</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <h1>Contracts</h1>
+
+    <!-- PROGRESS BAR -->
+    <div class="progress-bar-container">
+      <div class="progress-step" data-step="1">
+        <span class="step-number">1</span>
+        <span class="step-label">Contract Type</span>
+      </div>
+      <div class="progress-step" data-step="2">
+        <span class="step-number">2</span>
+        <span class="step-label">Property &amp; Price</span>
+      </div>
+      <div class="progress-step" data-step="3">
+        <span class="step-number">3</span>
+        <span class="step-label">Clauses</span>
+      </div>
+      <div class="progress-step" data-step="4">
+        <span class="step-number">4</span>
+        <span class="step-label">Review &amp; Generate</span>
+      </div>
+    </div>
+
+    <!-- WIZARD FORMS -->
+    <form id="contractsWizard" class="wizard-form">
+      <!-- STEP 1: CONTRACT TYPE & BASIC INFO -->
+      <div class="wizard-step" data-step="1">
+        <h2>Step 1: Contract Type &amp; Basic Info</h2>
+        <p class="step-description">
+          Select the contract type you need and provide basic parties info (Seller &amp; Buyer). 
+          Optionally enter an “Effective Date.”
+        </p>
+        
+        <div class="split-columns">
+          <div>
+            <label for="wizardContractType">Contract Type:</label>
+            <select id="wizardContractType">
+              <option value="purchaseSale">Wholesale Purchase &amp; Sale</option>
+              <option value="assignment">Assignment of Contract</option>
+              <option value="jointVenture">Joint Venture Agreement</option>
+              <option value="leaseOption">Lease Option Agreement</option>
+              <option value="addendum">Wholesale Addendum</option>
+              <option value="cancellation">Contract Cancellation/Release</option>
+            </select>
+          </div>
+          <div>
+            <label for="wizardDate">Effective Date (Optional):</label>
+            <input type="text" id="wizardDate" placeholder="e.g. Jan 1, 2027" />
+          </div>
+        </div>
+
+        <div class="split-columns">
+          <div>
+            <label for="wizardSellerName">Seller Name(s):</label>
+            <input type="text" id="wizardSellerName" placeholder="e.g. John A. Smith" />
+          </div>
+          <div>
+            <label for="wizardBuyerName">Buyer/Wholesaler Name(s):</label>
+            <input type="text" id="wizardBuyerName" placeholder="e.g. Jane Investor LLC" />
+          </div>
+        </div>
+
+        <!-- Step Navigation -->
+        <div class="wizard-nav">
+          <button type="button" class="btn wizard-next-btn" data-next="2">
+            Next &raquo;
+          </button>
+        </div>
+      </div>
+
+      <!-- STEP 2: PROPERTY & PRICE -->
+      <div class="wizard-step" data-step="2" style="display: none;">
+        <h2>Step 2: Property &amp; Price Details</h2>
+        <p class="step-description">
+          Enter the property’s location and financial details (price, assignment fee, closing date, etc.).
+        </p>
+
+        <div class="split-columns">
+          <div>
+            <label for="wizardPropertyAddress">Property Address:</label>
+            <input type="text" id="wizardPropertyAddress" placeholder="e.g. 123 Main St, Springfield, IL 62701" />
+          </div>
+          <div>
+            <label for="wizardPurchasePrice">Purchase Price ($):</label>
+            <input type="number" id="wizardPurchasePrice" placeholder="e.g. 85000" />
+          </div>
+        </div>
+
+        <div class="split-columns">
+          <div>
+            <label for="wizardAssignmentFee">Assignment Fee ($):</label>
+            <input type="number" id="wizardAssignmentFee" placeholder="e.g. 6000" />
+          </div>
+          <div>
+            <label for="wizardClosingDate">Closing Deadline:</label>
+            <input type="text" id="wizardClosingDate" placeholder="e.g. 30 days from signing" />
+          </div>
+        </div>
+
+        <!-- Step Navigation -->
+        <div class="wizard-nav">
+          <button type="button" class="btn wizard-prev-btn" data-prev="1">
+            &laquo; Back
+          </button>
+          <button type="button" class="btn wizard-next-btn" data-next="3">
+            Next &raquo;
+          </button>
+        </div>
+      </div>
+
+      <!-- STEP 3: OPTIONAL CLAUSES -->
+      <div class="wizard-step" data-step="3" style="display: none;">
+        <h2>Step 3: Additional Clauses</h2>
+        <p class="step-description">
+          Select any optional clauses or special provisions to include in your contract.
+        </p>
+
+        <!-- Optional Clauses Grid -->
+        <div class="clauses-grid advanced-clauses">
+          <label>
+            <input type="checkbox" class="clauseToggle" value="asIs">
+            As-Is Condition
+          </label>
+          <label>
+            <input type="checkbox" class="clauseToggle" value="timeIsOfEssence">
+            Time is of the Essence
+          </label>
+          <label>
+            <input type="checkbox" class="clauseToggle" value="noBroker">
+            No Broker Representation
+          </label>
+          <label>
+            <input type="checkbox" class="clauseToggle" value="confidentiality">
+            Confidentiality Clause
+          </label>
+          <label>
+            <input type="checkbox" class="clauseToggle" value="arbitration">
+            Arbitration / Dispute Resolution
+          </label>
+          <label>
+            <input type="checkbox" class="clauseToggle" value="poa">
+            Power of Attorney (POA) Clause
+          </label>
+          <label>
+            <input type="checkbox" class="clauseToggle" value="liquidatedDamages">
+            Liquidated Damages
+          </label>
+          <label>
+            <input type="checkbox" class="clauseToggle" value="earlyAccess">
+            Early Access for Buyer/Contractor
+          </label>
+        </div>
+
+        <!-- Step Navigation -->
+        <div class="wizard-nav">
+          <button type="button" class="btn wizard-prev-btn" data-prev="2">
+            &laquo; Back
+          </button>
+          <button type="button" class="btn wizard-next-btn" data-next="4">
+            Next &raquo;
+          </button>
+        </div>
+      </div>
+
+      <!-- STEP 4: REVIEW & GENERATE -->
+      <div class="wizard-step" data-step="4" style="display: none;">
+        <h2>Step 4: Review &amp; Generate</h2>
+        <p class="step-description">
+          Verify all the details below, then click “Generate Contract” to see a preview. 
+          You can copy the contract text or create a PDF.
+        </p>
+
+        <div class="review-box">
+          <h3>Final Summary</h3>
+          <ul id="reviewList">
+            <!-- Dynamically filled in JS -->
+          </ul>
+        </div>
+
+        <button type="submit" id="generateContractBtn" class="btn generate-btn">
+          Generate Contract
+        </button>
+
+        <!-- Final Output -->
+        <div id="contractOutputSection" class="contract-output-section" style="display: none;">
+          <h2>Contract Preview</h2>
+          <p class="note">
+            Below is your automatically generated contract. You can still edit after copying. 
+            This is not legal advice—always confirm with your legal counsel.
+          </p>
+
+          <div class="contract-text-container" id="contractTextContainer">
+            <!-- Filled by JS -->
+          </div>
+
+          <button class="btn copy-btn" id="copyContractBtn">Copy Text</button>
+          <button class="btn pdf-btn" id="pdfContractBtn">Generate PDF</button>
+        </div>
+
+        <!-- Step Navigation -->
+        <div class="wizard-nav">
+          <button type="button" class="btn wizard-prev-btn" data-prev="3">
+            &laquo; Back
+          </button>
+        </div>
+      </div>
+
+    </form>
+  </main>
+
+  <!-- ================
+       CSS STYLING
+  ================= -->
+  <style>
+    /* RESET */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    /* GLOBAL */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f1f2f3;
+      color: #333;
+    }
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* HEADER */
+    .app-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(135deg, #444, #333);
+      color: #fff;
+      padding: 0.75rem 1rem;
+      height: 60px;
+      z-index: 1000;
+    }
+    .app-header .brand {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+    .sidebar-toggle {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+    .sidebar-toggle .bar {
+      width: 25px;
+      height: 3px;
+      background-color: #fff;
+      margin: 4px 0;
+      transition: 0.4s;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      background: linear-gradient(135deg, #555, #333);
+      color: #fff;
+      width: 240px;
+      flex-shrink: 0;
+      padding: 1rem;
+      transition: transform 0.3s ease;
+      min-height: calc(100vh - 3.25rem);
+      overflow: auto;
+    }
+    @media (max-width: 768px) {
+      .sidebar {
+        position: fixed;
+        top: 3.25rem;
+        left: 0;
+        height: calc(100vh - 3.25rem);
+        transform: translateX(-250px);
+        z-index: 999;
+      }
+      .sidebar-toggle {
+        display: flex;
+      }
+      .sidebar-open {
+        transform: translateX(0);
+      }
+    }
+
+    .nav-menu ul {
+      list-style: none;
+      margin-top: 1rem;
+    }
+    .nav-menu ul li {
+      margin: 1rem 0;
+    }
+    .nav-menu ul li a {
+      display: block;
+      padding: 0.5rem 0.75rem;
+      border-radius: 4px;
+      font-weight: 500;
+      transition: background-color 0.2s ease;
+    }
+    .nav-menu ul li a:hover {
+      background-color: rgba(255,255,255,0.1);
+    }
+    .nav-menu ul li a.active {
+      background-color: rgba(255,255,255,0.2);
+    }
+
+    /* MAIN CONTENT */
+    .main-content {
+      padding: 1.5rem;
+    }
+    @media (max-width: 768px) {
+      .main-content {
+        margin-left: 0;
+      }
+    }
+    @media (min-width: 769px) {
+      .app-header {
+        position: fixed;
+        top: 0; left: 0; right: 0;
+      }
+      .sidebar {
+        position: fixed;
+        top: 60px;
+        left: 0;
+        bottom: 0;
+        width: 240px;
+        transform: none;
+      }
+      .main-content {
+        margin-left: 240px;
+        margin-top: 60px;
+        width: calc(100% - 240px);
+      }
+    }
+
+    /* PAGE TITLE */
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 1.8rem;
+    }
+    .page-intro {
+      font-size: 0.95rem;
+      margin-bottom: 2rem;
+      color: #555;
+    }
+
+    /* PROGRESS BAR */
+    .progress-bar-container {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+    }
+    .progress-step {
+      flex: 1;
+      text-align: center;
+      position: relative;
+    }
+    .progress-step::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: -50%;
+      width: 100%;
+      height: 2px;
+      background: #ccc;
+      z-index: 1;
+    }
+    .progress-step:first-child::before {
+      display: none;
+    }
+    .step-number {
+      background: #ccc;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: bold;
+      margin-bottom: 4px;
+      position: relative;
+      z-index: 2;
+    }
+    .step-label {
+      display: block;
+      font-size: 0.85rem;
+      color: #666;
+    }
+    .progress-step.active .step-number {
+      background: #007bff;
+    }
+    .progress-step.active .step-label {
+      color: #007bff;
+      font-weight: bold;
+    }
+
+    /* WIZARD FORM */
+    .wizard-form {
+      background: #fff;
+      padding: 1rem;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .wizard-step {
+      animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .wizard-step h2 {
+      margin-bottom: 0.5rem;
+    }
+    .wizard-step .step-description {
+      margin-bottom: 1rem;
+      color: #555;
+      font-size: 0.95rem;
+    }
+    .split-columns {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .split-columns > div {
+      flex: 1;
+      min-width: 220px;
+      display: flex;
+      flex-direction: column;
+    }
+    label {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    input, select {
+      padding: 0.6rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .clauses-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    .clauses-grid label {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      font-weight: normal;
+    }
+    .clauses-grid input[type="checkbox"] {
+      margin-right: 0.5rem;
+    }
+    .disclaimer {
+      background: #f8f9fa;
+      border-left: 4px solid #ffc107;
+      padding: 0.75rem;
+      font-size: 0.9rem;
+      color: #333;
+      margin-top: 1rem;
+    }
+    .wizard-nav {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .btn {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+    }
+    .wizard-prev-btn {
+      background-color: #6c757d;
+      color: #fff;
+    }
+    .wizard-prev-btn:hover {
+      background-color: #5a6268;
+    }
+    .wizard-next-btn {
+      background-color: #007bff;
+      color: #fff;
+    }
+    .wizard-next-btn:hover {
+      background-color: #0056b3;
+    }
+    .generate-btn {
+      background-color: #28a745;
+      color: #fff;
+      margin-top: 1rem;
+    }
+    .generate-btn:hover {
+      background-color: #218838;
+    }
+
+    /* REVIEW BOX */
+    .review-box {
+      background: #f9f9f9;
+      border: 1px solid #ccc;
+      padding: 1rem;
+      margin: 1rem 0;
+      border-radius: 4px;
+    }
+    .review-box h3 {
+      margin-bottom: 0.5rem;
+    }
+    #reviewList {
+      list-style: none;
+      padding-left: 0;
+      line-height: 1.6;
+    }
+
+    /* CONTRACT PREVIEW */
+    .contract-output-section {
+      margin-top: 1.5rem;
+      background: #fafafa;
+      border-radius: 6px;
+      padding: 1rem;
+      border: 1px solid #ccc;
+    }
+    .contract-output-section h2 {
+      margin-bottom: 0.5rem;
+    }
+    .note {
+      font-style: italic;
+      color: #666;
+      margin-bottom: 1rem;
+    }
+    .contract-text-container {
+      background-color: #fff;
+      border: 1px solid #ccc;
+      padding: 1rem;
+      min-height: 200px;
+      white-space: pre-wrap;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+      overflow-x: auto;
+    }
+    .copy-btn {
+      background-color: #17a2b8;
+      color: #fff;
+      margin-right: 0.5rem;
+    }
+    .copy-btn:hover {
+      background-color: #138496;
+    }
+    .pdf-btn {
+      background-color: #6c757d;
+      color: #fff;
+    }
+    .pdf-btn:hover {
+      background-color: #5a6268;
+    }
+  </style>
+
+  <!-- ================
+       JAVASCRIPT
+  ================= -->
+  <script>
+    // SIDEBAR TOGGLE (Mobile)
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    const sidebar = document.getElementById('sidebar');
+    sidebarToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('sidebar-open');
+    });
+
+    // WIZARD + CONTRACT LOGIC
+    document.addEventListener('DOMContentLoaded', () => {
+      const steps = document.querySelectorAll('.wizard-step');
+      const nextButtons = document.querySelectorAll('.wizard-next-btn');
+      const prevButtons = document.querySelectorAll('.wizard-prev-btn');
+      const progressSteps = document.querySelectorAll('.progress-step');
+      const generateBtn = document.getElementById('generateContractBtn');
+      const copyBtn = document.getElementById('copyContractBtn');
+      const pdfBtn = document.getElementById('pdfContractBtn');
+      const contractTextContainer = document.getElementById('contractTextContainer');
+      const contractOutputSection = document.getElementById('contractOutputSection');
+      const reviewList = document.getElementById('reviewList');
+
+      const clauseToggles = document.querySelectorAll('.clauseToggle');
+
+      let currentStep = 1;
+      updateProgressBar(currentStep);
+
+      nextButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const next = parseInt(btn.getAttribute('data-next'), 10);
+          goToStep(next);
+        });
+      });
+
+      prevButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const prev = parseInt(btn.getAttribute('data-prev'), 10);
+          goToStep(prev);
+        });
+      });
+
+      generateBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        // Build the final contract text
+        const contractText = buildContractText();
+        contractTextContainer.innerText = contractText;
+        contractOutputSection.style.display = 'block';
+      });
+
+      // On step 4 entry, fill the summary list
+      function fillReviewList() {
+        // Gather user inputs
+        const contractType = getVal('wizardContractType');
+        const dateVal      = getVal('wizardDate');
+        const seller       = getVal('wizardSellerName');
+        const buyer        = getVal('wizardBuyerName');
+        const address      = getVal('wizardPropertyAddress');
+        const price        = getVal('wizardPurchasePrice');
+        const fee          = getVal('wizardAssignmentFee');
+        const closing      = getVal('wizardClosingDate');
+
+        // Show them in the UI
+        reviewList.innerHTML = `
+          <li><strong>Contract Type:</strong> ${contractType || '--'}</li>
+          <li><strong>Effective Date:</strong> ${dateVal || '--'}</li>
+          <li><strong>Seller:</strong> ${seller || '--'}</li>
+          <li><strong>Buyer:</strong> ${buyer || '--'}</li>
+          <li><strong>Property Address:</strong> ${address || '--'}</li>
+          <li><strong>Purchase Price:</strong> ${price ? '$'+price : '--'}</li>
+          <li><strong>Assignment Fee:</strong> ${fee ? '$'+fee : '(none)'}</li>
+          <li><strong>Closing Deadline:</strong> ${closing || '--'}</li>
+        `;
+      }
+
+      // COPY
+      copyBtn.addEventListener('click', () => {
+        const textToCopy = contractTextContainer.innerText.trim();
+        if (!textToCopy) return;
+
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard.writeText(textToCopy)
+            .then(() => alert("Contract text copied to clipboard!"))
+            .catch(err => console.error("Failed to copy text:", err));
+        } else {
+          // Fallback
+          const textArea = document.createElement('textarea');
+          textArea.value = textToCopy;
+          document.body.appendChild(textArea);
+          textArea.select();
+          try {
+            document.execCommand('copy');
+            alert("Contract text copied to clipboard!");
+          } catch (err) {
+            console.error("Fallback copy failed", err);
+          }
+          document.body.removeChild(textArea);
+        }
+      });
+
+      // PDF
+      pdfBtn.addEventListener('click', () => {
+        // We’ll convert the content of #contractTextContainer into a PDF
+        const element = document.getElementById('contractTextContainer');
+
+        // Optional config (filename, margins, etc.)
+        const opt = {
+          margin:       0.5,
+          filename:     'WholesalingContract.pdf',
+          image:        { type: 'jpeg', quality: 0.98 },
+          html2canvas:  { scale: 2 },
+          jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+        };
+
+        html2pdf().set(opt).from(element).save();
+      });
+
+      // HELPER: Move to a wizard step
+      function goToStep(stepNumber) {
+        // Hide all steps
+        steps.forEach(s => s.style.display = 'none');
+        // Show the target step
+        const targetStep = document.querySelector(`.wizard-step[data-step="${stepNumber}"]`);
+        if (targetStep) {
+          targetStep.style.display = 'block';
+        }
+        currentStep = stepNumber;
+        updateProgressBar(currentStep);
+
+        // If step 4, fill the review
+        if (currentStep === 4) {
+          fillReviewList();
+        }
+      }
+
+      // PROGRESS BAR
+      function updateProgressBar(step) {
+        progressSteps.forEach(ps => {
+          const psStep = parseInt(ps.getAttribute('data-step'), 10);
+          if (psStep <= step) {
+            ps.classList.add('active');
+          } else {
+            ps.classList.remove('active');
+          }
+        });
+      }
+
+      function getVal(id) {
+        return document.getElementById(id)?.value.trim() || "";
+      }
+
+      // Build the final contract text from user inputs + optional clauses
+      function buildContractText() {
+        // All fields
+        const contractType = getVal('wizardContractType');
+        const dateVal      = getVal('wizardDate') || "[Date]";
+        const seller       = getVal('wizardSellerName') || "[Seller Name]";
+        const buyer        = getVal('wizardBuyerName')  || "[Buyer Name]";
+        const address      = getVal('wizardPropertyAddress') || "[Property Address]";
+        const price        = getVal('wizardPurchasePrice') || "[Purchase Price]";
+        const fee          = getVal('wizardAssignmentFee')  || "0";
+        const closing      = getVal('wizardClosingDate') || "[Closing Deadline]";
+
+        // Which optional clauses
+        const activeClauses = Array.from(clauseToggles)
+          .filter(c => c.checked)
+          .map(c => c.value);
+
+        // Merge into final text
+        const finalText = generateFinalContract({
+          type: contractType,
+          dateVal,
+          seller,
+          buyer,
+          address,
+          price,
+          fee,
+          closing,
+          activeClauses
+        });
+
+        return finalText;
+      }
+
+      // TEMPLATES (with more advanced language)
+      const templates = {
+        purchaseSale: `
+WHOLESALE PURCHASE AND SALE AGREEMENT
+
+1. EFFECTIVE DATE: [dateVal]
+
+2. PARTIES: This Wholesale Purchase and Sale Agreement ("Agreement") is entered into by and between [seller] ("Seller") and [buyer] ("Buyer" or "Wholesaler"). Seller and Buyer are collectively referred to as the "Parties."
+
+3. PROPERTY: The real property ("Property") is located at [address], together with all improvements, fixtures, and appurtenances.
+
+4. PURCHASE PRICE: The purchase price for the Property is $[price]. Buyer shall pay or arrange for payment at closing, subject to any inspection or financing contingencies.
+
+5. ASSIGNMENT FEE: Buyer may assign this Agreement to a third party for a fee of $[fee], which may be collected at or prior to closing.
+
+6. CLOSING: The transaction shall close on or before [closing], unless the Parties mutually agree to extend.
+
+7. EARNEST MONEY: (If any) Buyer shall deposit [specify amount] as earnest money with [Escrow Agent / Title Company], to be applied toward the purchase price at closing or refunded under conditions specified herein.
+
+8. ADDITIONAL PROVISIONS PLACEHOLDER
+
+9. GOVERNING LAW: This Agreement shall be governed by and construed under the laws of the state in which the Property is located.
+
+10. SIGNATURES: The Parties acknowledge that execution by electronic signature is valid if allowed by applicable law.
+
+IN WITNESS WHEREOF, the Parties execute this Agreement as of the Effective Date.
+
+____________________________________ (Seller)
+Date: _______________
+
+____________________________________ (Buyer)
+Date: _______________
+`.trim(),
+
+        assignment: `
+ASSIGNMENT OF REAL ESTATE PURCHASE AGREEMENT
+
+1. EFFECTIVE DATE: [dateVal]
+
+2. ASSIGNOR: [buyer] ("Assignor"), who has an existing contract to purchase real property located at [address] from [seller] ("Seller").
+
+3. ASSIGNEE: This document assigns all of Assignor's rights, title, and interest in said contract to "Assignee," whose information is [optionally add name/address of assignee here].
+
+4. ASSIGNMENT FEE: As consideration for this assignment, Assignee shall pay Assignor $[fee] at or before the closing date of the original purchase contract.
+
+5. PURCHASE PRICE: The original contract purchase price is $[price]. Assignee assumes all obligations, contingencies, and conditions of the underlying contract.
+
+6. CLOSING DATE: The closing shall occur on or before [closing], or as otherwise specified in the original contract, unless extended by mutual agreement of all parties.
+
+7. ADDITIONAL PROVISIONS PLACEHOLDER
+
+8. RELEASE: Upon assignment, Assignor is released from liability under the original contract, except for obligations that arose before assignment.
+
+Signatures:
+
+Assignor (Wholesaler): ___________________   Date: ______
+Assignee: ________________________________   Date: ______
+Seller (optional acknowledgment): _________ Date: ______
+`.trim(),
+
+        jointVenture: `
+JOINT VENTURE AGREEMENT (WHOLESALING)
+
+1. EFFECTIVE DATE: [dateVal]
+
+2. PARTIES: This Joint Venture Agreement ("Agreement") is between [buyer] and [seller], collectively referred to as the "Partners."
+
+3. PURPOSE: The Partners wish to cooperate in wholesaling the property located at [address]. The underlying purchase price is $[price].
+
+4. ROLES & RESPONSIBILITIES:
+   - [buyer]: Will handle acquisitions, negotiations, or marketing as agreed.
+   - [seller]: Will provide funding, buyer leads, or other resources as agreed.
+
+5. REVENUE & ASSIGNMENT FEE: Any assignment fee ($[fee]) or net profits from the wholesale transaction shall be split [e.g., 50/50 or another ratio] among the Partners.
+
+6. CLOSING: The transaction shall close on or before [closing], or per the underlying purchase agreement.
+
+7. ADDITIONAL PROVISIONS PLACEHOLDER
+
+8. DISPUTE RESOLUTION & GOVERNING LAW: Partners agree to resolve any disputes in good faith. This Agreement is governed by the laws of the state in which the Property is located.
+
+Signatures:
+Partner A: _____________________   Date: _______
+Partner B: _____________________   Date: _______
+`.trim(),
+
+        leaseOption: `
+LEASE OPTION AGREEMENT
+
+1. EFFECTIVE DATE: [dateVal]
+
+2. PARTIES: [seller] ("Landlord/Optionor") and [buyer] ("Tenant/Optionee") concerning the property at [address] ("Property").
+
+3. OPTION & PURCHASE PRICE: Tenant/Optionee pays $[fee] as a non-refundable option fee. If the option is exercised, the purchase price is $[price], payable at closing on or before [closing].
+
+4. LEASE TERM: Tenant/Optionee shall lease the Property for a term beginning on [Start Date], at a monthly rent specified by separate lease addendum.
+
+5. MAINTENANCE & REPAIRS: [State who is responsible for routine maintenance or major repairs. E.g. Tenant is responsible for day-to-day upkeep, Landlord covers structural.]
+
+6. ADDITIONAL PROVISIONS PLACEHOLDER
+
+7. DEFAULT & REMEDIES: If Tenant/Optionee fails to perform, the option fee may be forfeited as liquidated damages, or as otherwise allowed by law.
+
+Signatures:
+
+Landlord/Optionor: ___________________ Date: ______
+Tenant/Optionee: _____________________ Date: ______
+`.trim(),
+
+        addendum: `
+WHOLESALE ADDENDUM TO PURCHASE AGREEMENT
+
+1. EFFECTIVE DATE: [dateVal]
+
+2. PARTIES: [seller] ("Seller") and [buyer] ("Buyer"), regarding the real property at [address].
+
+3. PURPOSE: This Addendum modifies the existing Purchase Agreement dated [dateVal] to reflect that Buyer intends to wholesale or assign their interest in the Agreement to another end-buyer for an assignment fee of $[fee].
+
+4. PURCHASE PRICE & CLOSING: The original purchase price is $[price]. The closing is scheduled on or before [closing].
+
+5. ADDITIONAL PROVISIONS PLACEHOLDER
+
+6. REMAINDER OF TERMS: All other terms and conditions of the original Purchase Agreement remain in full force and effect.
+
+Seller: ___________________________ Date: ______
+Buyer: ____________________________ Date: ______
+`.trim(),
+
+        cancellation: `
+REAL ESTATE CONTRACT CANCELLATION & MUTUAL RELEASE
+
+1. EFFECTIVE DATE: [dateVal]
+
+2. PARTIES: [seller] ("Seller") and [buyer] ("Buyer"), referencing the property at [address]. The original contract purchase price was $[price].
+
+3. REASON FOR CANCELLATION: The Parties agree to terminate the original purchase agreement dated [dateVal], for reasons including [e.g., inability to obtain financing, mutual agreement, inspection issues, etc.].
+
+4. EARNEST MONEY / FEES: Any earnest money or deposits shall be [returned to Buyer / forfeited to Seller / split in a certain ratio], as specified here: _______.
+
+5. ADDITIONAL PROVISIONS PLACEHOLDER
+
+6. RELEASE: Both Parties hereby release each other from any further liability or obligation under the original contract.
+
+Signatures:
+Seller: _________________________   Date: ______
+Buyer: __________________________   Date: ______
+`.trim()
+      };
+
+      // OPTIONAL CLAUSES (with expanded text)
+      const optionalClauses = {
+        asIs: `
+"As-Is" Condition: The Buyer accepts the Property in its current condition, with no obligation on the Seller to make repairs or improvements unless otherwise stated. Buyer may conduct inspections to verify condition.`,
+        timeIsOfEssence: `
+Time Is of the Essence: All deadlines and closing dates shall be strictly enforced. Any delay not mutually agreed upon may constitute a default.`,
+        noBroker: `
+No Broker Representation: The Parties confirm no real estate brokers/agents are involved, or if they are, the Parties will separately address any commissions or fees.`,
+        confidentiality: `
+Confidentiality: The Parties agree to keep the terms of this transaction confidential, disclosing only as required by law or to relevant professional advisors (e.g., title company, attorneys).`,
+        arbitration: `
+Arbitration / Dispute Resolution: Any dispute arising under this Agreement shall be resolved by binding arbitration pursuant to the rules of [Arbitration Organization], and the award may be entered in any court of competent jurisdiction.`,
+        poa: `
+Power of Attorney (POA) Clause: Seller grants Buyer a limited power of attorney to perform required closing actions, if permitted by local law and fully disclosed to the title/escrow agent.`,
+        liquidatedDamages: `
+Liquidated Damages: If either Party defaults, the non-defaulting Party may retain or claim [Earnest Money / Option Fee] as liquidated damages in lieu of pursuing further legal remedies, unless state law restricts this.`,
+        earlyAccess: `
+Early Access: Buyer (and/or Buyer's contractors/inspectors) may have reasonable access to the Property prior to closing for inspections, estimates, or due diligence, with Seller's prior notice and consent.`
+      };
+
+      function generateFinalContract(opts) {
+        // Get base template
+        let baseTemplate = templates[opts.type] || templates.purchaseSale;
+        let text = baseTemplate;
+
+        // Replace placeholders
+        text = text
+          .replace('[dateVal]', opts.dateVal)
+          .replace('[seller]', opts.seller)
+          .replace('[buyer]', opts.buyer)
+          .replace('[address]', opts.address)
+          .replace('[price]', opts.price)
+          .replace('[fee]', opts.fee)
+          .replace('[closing]', opts.closing);
+
+        // Build optional clauses
+        let clauseSection = "";
+        opts.activeClauses.forEach(clauseKey => {
+          if (optionalClauses[clauseKey]) {
+            clauseSection += `\n- ${optionalClauses[clauseKey]}\n`;
+          }
+        });
+        if (!clauseSection.trim()) {
+          clauseSection = "(No additional optional clauses selected.)";
+        }
+
+        // Insert optional clauses
+        if (text.includes('ADDITIONAL PROVISIONS PLACEHOLDER')) {
+          text = text.replace('ADDITIONAL PROVISIONS PLACEHOLDER', clauseSection);
+        } else {
+          text += `\n\nOPTIONAL CLAUSES:\n${clauseSection}`;
+        }
+
+        return text.trim();
+      }
+    });
+  </script>
+</body>
+</html>

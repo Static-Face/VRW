@@ -1,0 +1,294 @@
+/* RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* GLOBAL STYLES */
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f1f2f3;
+    color: #333;
+  }
+  
+  /* LINKS */
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  /* HEADER */
+  .app-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(135deg, #444, #333);
+    color: #fff;
+    padding: 0.75rem 1rem;
+    height: 60px; /* Make header a fixed height */
+    z-index: 1000;
+  }
+  
+ /* Brand text */
+.app-header .brand {
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+  
+  /* HAMBURGER (TOGGLE) BUTTON */
+  .sidebar-toggle {
+    display: none; /* hidden by default (shown via media query below) */
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .sidebar-toggle .bar {
+    width: 25px;
+    height: 3px;
+    background-color: #fff;
+    margin: 4px 0;
+    transition: 0.4s;
+  }
+  
+  /* SIDEBAR */
+  .sidebar {
+    background: linear-gradient(135deg, #555, #333);
+    color: #fff;
+    width: 240px;
+    flex-shrink: 0;
+    padding: 1rem;
+    transition: transform 0.3s ease;
+    min-height: calc(100vh - 3.25rem); /* account for header height */
+    overflow: auto;
+  }
+  
+  /* Slide sidebar left for mobile by default */
+  @media (max-width: 768px) {
+    .sidebar {
+      position: fixed;
+      top: 3.25rem; /* below header */
+      left: 0;
+      height: calc(100vh - 3.25rem);
+      transform: translateX(-250px);
+      z-index: 999;
+    }
+    .sidebar-open {
+      transform: translateX(0);
+    }
+  }
+  
+/* NAV MENU */
+.nav-menu ul {
+    list-style: none;
+    margin-top: 1rem;
+  }
+  
+  .nav-menu ul li {
+    margin: 1rem 0;
+  }
+  
+  .nav-menu ul li a {
+    display: block;
+    padding: 0.5rem 0.75rem;
+    border-radius: 4px;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+  }
+  
+  .nav-menu ul li a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  .nav-menu ul li a.active {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+  
+/* MAIN CONTENT */
+.main-content {
+    padding: 1.5rem;
+  }
+  
+  /* Adjust margin when sidebar is hidden on mobile */
+  @media (max-width: 768px) {
+    .main-content {
+      margin-left: 0; /* no left margin on mobile */
+    }
+  }
+  
+/* HEADINGS */
+h1 {
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  h2 {
+    margin: 1rem 0 0.5rem;
+  }
+  
+/* DASHBOARD CARDS */
+.cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  
+  .card {
+    background-color: #fff;
+    border-radius: 6px;
+    padding: 1rem;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  }
+  
+  .card h3 {
+    margin-bottom: 0.75rem;
+    font-size: 1.2rem;
+  }
+  
+  .big-number {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #444;
+  }
+  
+  /* CHART / ACTIVITY SECTION */
+  .chart-placeholder {
+    background: #fff;
+    margin-top: 1.5rem;
+    padding: 1rem;
+    border-radius: 6px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+  
+  #activityFeed ul {
+    list-style: none;
+    margin-top: 0.5rem;
+    padding-left: 0;
+  }
+  
+  #activityFeed li {
+    background: #f9f9f9;
+    border-left: 4px solid #333;
+    padding: 0.5rem 1rem;
+    margin-bottom: 0.5rem;
+    border-radius: 4px;
+  }
+
+  /* NOTES FORM */
+.notes-form {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+  }
+  
+  .notes-form textarea {
+    resize: vertical;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+    font-family: inherit;
+    font-size: 1rem;
+  }
+  
+  .notes-form button {
+    align-self: flex-start;
+    background-color: #007bff;
+    color: #fff;
+    padding: 0.6rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .notes-form button:hover {
+    background-color: #0069d9;
+  }
+  
+  /* NOTES LIST */
+  #notesList {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  #notesList li {
+    background: #f9f9f9;
+    border-left: 4px solid #333;
+    padding: 0.5rem 1rem;
+    margin-bottom: 0.5rem;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .note-text {
+    flex: 1;
+    margin-right: 1rem;
+  }
+  .remove-note-btn {
+    background-color: #dc3545;
+    color: #fff;
+    padding: 0.4rem 0.7rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .remove-note-btn:hover {
+    background-color: #c82333;
+  }
+  
+  /* PIPELINE TABLE */
+  .pipeline-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0.75rem;
+  }
+  
+  .pipeline-table th,
+  .pipeline-table td {
+    text-align: left;
+    padding: 0.75rem;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .pipeline-table thead {
+    background: #f9f9f9;
+  }
+  /* MEDIA QUERIES FOR RESPONSIVE LAYOUT */
+  @media (max-width: 768px) {
+    .sidebar-toggle {
+      display: flex;
+    }
+  }
+  
+  /* DESKTOP FIX: Keep header & sidebar fixed so content starts at top */
+@media (min-width: 769px) {
+    .app-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+    }
+    .sidebar {
+      position: fixed;
+      top: 60px; /* below header */
+      left: 0;
+      bottom: 0;
+      width: 240px;
+      transform: none; /* always visible on desktop */
+    }
+    .main-content {
+      margin-left: 240px; /* account for fixed sidebar */
+      margin-top: 60px;  /* account for fixed header */
+      width: calc(100% - 240px);
+    }
+  }

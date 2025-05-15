@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Wholesaling Command Center - Tools</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Header (Same as Dashboard) -->
+  <header class="app-header">
+    <div class="brand">
+      <span>My Wholesaling Hub</span>
+    </div>
+    <!-- The 3-line (hamburger) button -->
+    <button id="sidebarToggle" class="sidebar-toggle">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </button>
+  </header>
+
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar" id="sidebar">
+    <nav class="nav-menu">
+      <ul>
+        <li><a href="index.html">Dashboard</a></li>
+        <li><a href="leads.html">Leads</a></li>
+        <li><a href="buyers.html">Buyers</a></li>
+        <li><a href="properties.html">Properties</a></li>
+        <li><a href="tools.html" class="active">Tools</a></li>
+        <li><a href="scripts.html">Scripts</a></li>
+        <li><a href="contracts.html">Contracts</a></li>
+        <li><a href="settings.html">Settings</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <div class="main-content">
+    <h1>Real Estate Calculators &amp; Tools</h1>
+    <!-- Tools Grid -->
+    <div class="tools-grid">
+
+      <div class="tool-card">
+        <div class="card-scroll-content">
+          <h2>
+            ROI Calculator 
+            <span class="tooltip-trigger" data-tooltip="Return on Investment based on total costs and resale value.">?</span>
+          </h2>
+          <p>Estimate Return on Investment from fix-and-flip or other deals.</p>
+        </div>
+        <button class="btn-secondary open-tool-btn" data-tool="roiModal">Open</button>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-scroll-content">
+          <h2>
+            MAO Calculator
+            <span class="tooltip-trigger" data-tooltip="Max Allowable Offer = ARV * [Offer %] - repairs - fee.">?</span>
+          </h2>
+          <p>Max Allowable Offer (ARV * % - repairs - wholesale fee).</p>
+        </div>
+        <button class="btn-secondary open-tool-btn" data-tool="maoModal">Open</button>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-scroll-content">
+          <h2>
+            Rehab Estimator 
+            <span class="tooltip-trigger" data-tooltip="Approx. renovation costs for major items (roof, kitchen, bath, etc.).">?</span>
+          </h2>
+          <p>Get a rough estimate of renovation costs (roof, kitchen, bath, etc.).</p>
+        </div>
+        <button class="btn-secondary open-tool-btn" data-tool="rehabModal">Open</button>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-scroll-content">
+          <h2>
+            Mortgage Payment 
+            <span class="tooltip-trigger" data-tooltip="Monthly P&I based on loan amount, rate & term (+ optional taxes & insurance).">?</span>
+          </h2>
+          <p>Calculate monthly principal &amp; interest based on rate &amp; term.</p>
+        </div>
+        <button class="btn-secondary open-tool-btn" data-tool="mortgageModal">Open</button>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-scroll-content">
+          <h2>
+            Cash Flow 
+            <span class="tooltip-trigger" data-tooltip="Monthly rent minus mortgage & other expenses.">?</span>
+          </h2>
+          <p>Estimate monthly rental cash flow (rent - mortgage - expenses).</p>
+        </div>
+        <button class="btn-secondary open-tool-btn" data-tool="cashflowModal">Open</button>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-scroll-content">
+          <h2>
+            Rental ROI
+            <span class="tooltip-trigger" data-tooltip="Annual return based on monthly net income vs. your total cash in.">?</span>
+          </h2>
+          <p>Compute annual ROI factoring net monthly income &amp; upfront costs.</p>
+        </div>
+        <button class="btn-secondary open-tool-btn" data-tool="rentalRoiModal">Open</button>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-scroll-content">
+          <h2>
+            Cap Rate 
+            <span class="tooltip-trigger" data-tooltip="Capitalization Rate = (NOI / Purchase Price) * 100.">?</span>
+          </h2>
+          <p>Capitalization Rate = (NOI / Purchase Price) * 100.</p>
+        </div>
+        <button class="btn-secondary open-tool-btn" data-tool="capRateModal">Open</button>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-scroll-content">
+          <h2>
+            BRRRR Calculator 
+            <span class="tooltip-trigger" data-tooltip="Buy, Rehab, Rent, Refinance, Repeat. Evaluate your end position.">?</span>
+          </h2>
+          <p>Buy, Rehab, Rent, Refinance, Repeat. Estimate your total deal outcomes.</p>
+        </div>
+        <button class="btn-secondary open-tool-btn" data-tool="brrrrModal">Open</button>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-scroll-content">
+          <h2>
+            Cash-on-Cash Return
+            <span class="tooltip-trigger" data-tooltip="Measures annual net cash flow against total cash invested.">?</span>
+          </h2>
+          <p>Annual return based on actual cash invested vs. net income.</p>
+        </div>
+        <button class="btn-secondary open-tool-btn" data-tool="cocModal">Open</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================================
+       MODALS (No export/analysis)
+       ================================
+  -->
+
+  <!-- ROI Modal -->
+  <div class="modal" id="roiModal">
+    <div class="modal-content">
+      <span class="close" data-close="roiModal">&times;</span>
+      <h2>ROI Calculator</h2>
+      <p>Estimate Return on Investment from purchase, rehab, and resale.</p>
+      <label for="roiPurchasePrice">Purchase Price:</label>
+      <input type="number" id="roiPurchasePrice" placeholder="e.g. 100000" />
+
+      <label for="roiRehabCost">Rehab/Repairs:</label>
+      <input type="number" id="roiRehabCost" placeholder="e.g. 30000" />
+
+      <label for="roiHoldingCost">Holding Costs:</label>
+      <input type="number" id="roiHoldingCost" placeholder="e.g. 5000" />
+
+      <label for="roiFinancingCost">Financing Costs (Optional):</label>
+      <input type="number" id="roiFinancingCost" placeholder="e.g. 2000" />
+
+      <label for="roiSalePrice">Sale Price (Exit):</label>
+      <input type="number" id="roiSalePrice" placeholder="e.g. 160000" />
+
+      <button class="btn-primary" id="calcROIBtn">Calculate ROI</button>
+      <p><strong>ROI (%):</strong> <span id="roiResult">0</span>%</p>
+      <p><strong>Profit:</strong> $<span id="roiProfit">0.00</span></p>
+    </div>
+  </div>
+
+  <!-- MAO Modal -->
+  <div class="modal" id="maoModal">
+    <div class="modal-content">
+      <span class="close" data-close="maoModal">&times;</span>
+      <h2>MAO Calculator</h2>
+      <label for="arvInput">ARV:</label>
+      <input type="number" id="arvInput" placeholder="200000" />
+
+      <label for="offerPercentInput">Offer % (e.g. 70):</label>
+      <input type="number" id="offerPercentInput" placeholder="70" />
+
+      <label for="repairCostsInput">Repair Costs:</label>
+      <input type="number" id="repairCostsInput" placeholder="30000" />
+
+      <label for="wholesaleFeeInput">Wholesale Fee:</label>
+      <input type="number" id="wholesaleFeeInput" placeholder="10000" />
+
+      <button class="btn-primary" id="calcMAOBtn">Calculate MAO</button>
+      <p><strong>Max Allowable Offer:</strong> $<span id="maoResult">0.00</span></p>
+    </div>
+  </div>
+
+  <!-- Rehab Estimator Modal -->
+  <div class="modal" id="rehabModal">
+    <div class="modal-content">
+      <span class="close" data-close="rehabModal">&times;</span>
+      <h2>Rehab Estimator</h2>
+      <label for="rehabRoof">Roof:</label>
+      <input type="number" id="rehabRoof" placeholder="5000" />
+      <label for="rehabKitchen">Kitchen:</label>
+      <input type="number" id="rehabKitchen" placeholder="8000" />
+      <label for="rehabBathrooms">Bathrooms:</label>
+      <input type="number" id="rehabBathrooms" placeholder="6000" />
+      <label for="rehabMisc">Misc/Other:</label>
+      <input type="number" id="rehabMisc" placeholder="3000" />
+
+      <button class="btn-primary" id="calcRehabBtn">Calculate Rehab</button>
+      <p><strong>Total Rehab:</strong> $<span id="rehabTotalResult">0.00</span></p>
+    </div>
+  </div>
+
+  <!-- Mortgage Modal -->
+  <div class="modal" id="mortgageModal">
+    <div class="modal-content">
+      <span class="close" data-close="mortgageModal">&times;</span>
+      <h2>Mortgage Payment</h2>
+      <label for="mortgagePrincipal">Loan Amount:</label>
+      <input type="number" id="mortgagePrincipal" placeholder="150000" />
+      <label for="mortgageRate">Interest Rate (%):</label>
+      <input type="number" id="mortgageRate" placeholder="5" />
+      <label for="mortgageYears">Term (Years):</label>
+      <input type="number" id="mortgageYears" placeholder="30" />
+      <label for="mortgageTaxes">Monthly Taxes (optional):</label>
+      <input type="number" id="mortgageTaxes" placeholder="100" />
+      <label for="mortgageInsurance">Monthly Insurance (optional):</label>
+      <input type="number" id="mortgageInsurance" placeholder="50" />
+
+      <button class="btn-primary" id="calcMortgageBtn">Calculate Payment</button>
+      <p><strong>Monthly Payment (P&amp;I):</strong> $<span id="mortgagePaymentResult">0.00</span></p>
+      <p><strong>Approx. Full Payment (PITI):</strong> $<span id="mortgageFullPayment">0.00</span></p>
+    </div>
+  </div>
+
+  <!-- Cash Flow Modal -->
+  <div class="modal" id="cashflowModal">
+    <div class="modal-content">
+      <span class="close" data-close="cashflowModal">&times;</span>
+      <h2>Cash Flow Calculator</h2>
+      <label for="cfRent">Monthly Rent:</label>
+      <input type="number" id="cfRent" placeholder="1200" />
+      <label for="cfMortgage">Monthly Mortgage:</label>
+      <input type="number" id="cfMortgage" placeholder="700" />
+      <label for="cfExpenses">Other Expenses:</label>
+      <input type="number" id="cfExpenses" placeholder="200" />
+
+      <button class="btn-primary" id="calcCashFlowBtn">Calculate Cash Flow</button>
+      <p><strong>Monthly Cash Flow:</strong> $<span id="cashFlowResult">0.00</span></p>
+    </div>
+  </div>
+
+  <!-- Rental ROI Modal -->
+  <div class="modal" id="rentalRoiModal">
+    <div class="modal-content">
+      <span class="close" data-close="rentalRoiModal">&times;</span>
+      <h2>Rental ROI Calculator</h2>
+      <label for="rentalPurchase">Purchase Price:</label>
+      <input type="number" id="rentalPurchase" placeholder="100000" />
+      <label for="rentalDownPayment">Down Payment:</label>
+      <input type="number" id="rentalDownPayment" placeholder="20000" />
+      <label for="rentalClosingCosts">Closing Costs:</label>
+      <input type="number" id="rentalClosingCosts" placeholder="3000" />
+      <label for="rentalMonthlyNetIncome">Monthly Net Income:</label>
+      <input type="number" id="rentalMonthlyNetIncome" placeholder="300" />
+
+      <button class="btn-primary" id="calcRentalRoiBtn">Calculate ROI</button>
+      <p><strong>Annual ROI (%):</strong> <span id="rentalRoiResult">0</span>%</p>
+    </div>
+  </div>
+
+  <!-- Cap Rate Modal -->
+  <div class="modal" id="capRateModal">
+    <div class="modal-content">
+      <span class="close" data-close="capRateModal">&times;</span>
+      <h2>Cap Rate Calculator</h2>
+      <p>Cap Rate = (NOI / Purchase Price) * 100</p>
+      <label for="capNOI">Net Operating Income (Annual):</label>
+      <input type="number" id="capNOI" placeholder="e.g. 12000" />
+      <label for="capPrice">Purchase Price:</label>
+      <input type="number" id="capPrice" placeholder="e.g. 150000" />
+
+      <button class="btn-primary" id="calcCapRateBtn">Calculate Cap Rate</button>
+      <p><strong>Cap Rate (%):</strong> <span id="capRateResult">0</span>%</p>
+    </div>
+  </div>
+
+  <!-- BRRRR Modal -->
+  <div class="modal" id="brrrrModal">
+    <div class="modal-content">
+      <span class="close" data-close="brrrrModal">&times;</span>
+      <h2>BRRRR Calculator</h2>
+      <p>Estimate your deal outcome after Buy, Rehab, Rent, Refinance, Repeat.</p>
+      <label for="brrrrBuyPrice">Buy Price:</label>
+      <input type="number" id="brrrrBuyPrice" placeholder="e.g. 100000" />
+      <label for="brrrrRehab">Rehab Costs:</label>
+      <input type="number" id="brrrrRehab" placeholder="e.g. 30000" />
+      <label for="brrrrAppraised">Appraised Value (After Rehab):</label>
+      <input type="number" id="brrrrAppraised" placeholder="e.g. 160000" />
+      <label for="brrrrRefiPercent">Refi % (Loan-to-Value):</label>
+      <input type="number" id="brrrrRefiPercent" placeholder="75" />
+
+      <button class="btn-primary" id="calcBRRRRBtn">Calculate BRRRR</button>
+      <p><strong>Refinance Loan Amount:</strong> $<span id="brrrrLoan">0.00</span></p>
+      <p><strong>Cash Left in Deal:</strong> $<span id="brrrrCashLeft">0.00</span></p>
+    </div>
+  </div>
+
+  <!-- Cash-on-Cash Modal -->
+  <div class="modal" id="cocModal">
+    <div class="modal-content">
+      <span class="close" data-close="cocModal">&times;</span>
+      <h2>Cash-on-Cash Return</h2>
+      <p>Annual return based on actual cash invested vs. net income.</p>
+      <label for="cocDownPayment">Down Payment / Cash Invested:</label>
+      <input type="number" id="cocDownPayment" placeholder="e.g. 30000" />
+      <label for="cocAnnualCashFlow">Annual Cash Flow (Net):</label>
+      <input type="number" id="cocAnnualCashFlow" placeholder="e.g. 3600" />
+      <button class="btn-primary" id="calcCoCBtn">Calculate CoC</button>
+      <p><strong>Cash-on-Cash Return (%):</strong> <span id="cocResult">0</span>%</p>
+    </div>
+  </div>
+
+  <style>
+    /* RESET */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* GLOBAL STYLES */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f1f2f3;
+      color: #333;
+    }
+
+    /* LINKS */
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* HEADER (Same as Dashboard) */
+    .app-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(135deg, #444, #333);
+      color: #fff;
+      padding: 0.75rem 1rem;
+      height: 60px;
+      z-index: 1000;
+    }
+    .app-header .brand {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    /* HAMBURGER (TOGGLE) BUTTON */
+    .sidebar-toggle {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+    .sidebar-toggle .bar {
+      width: 25px;
+      height: 3px;
+      background-color: #fff;
+      margin: 4px 0;
+      transition: 0.4s;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      background: linear-gradient(135deg, #555, #333);
+      color: #fff;
+      width: 240px;
+      flex-shrink: 0;
+      padding: 1rem;
+      transition: transform 0.3s ease;
+      min-height: calc(100vh - 3.25rem);
+      overflow: auto;
+    }
+    @media (max-width: 768px) {
+      .sidebar {
+        position: fixed;
+        top: 3.25rem;
+        left: 0;
+        height: calc(100vh - 3.25rem);
+        transform: translateX(-250px);
+        z-index: 999;
+      }
+      .sidebar-toggle {
+        display: flex;
+      }
+      .sidebar-open {
+        transform: translateX(0);
+      }
+    }
+
+    /* NAV MENU */
+    .nav-menu ul {
+      list-style: none;
+      margin-top: 1rem;
+    }
+    .nav-menu ul li {
+      margin: 1rem 0;
+    }
+    .nav-menu ul li a {
+      display: block;
+      padding: 0.5rem 0.75rem;
+      border-radius: 4px;
+      font-weight: 500;
+      transition: background-color 0.2s ease;
+    }
+    .nav-menu ul li a:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+    .nav-menu ul li a.active {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    /* MAIN CONTENT */
+    .main-content {
+      padding: 1.5rem;
+    }
+    @media (max-width: 768px) {
+      .main-content {
+        margin-left: 0;
+      }
+    }
+    @media (min-width: 769px) {
+      .app-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+      }
+      .sidebar {
+        position: fixed;
+        top: 60px;
+        left: 0;
+        bottom: 0;
+        width: 240px;
+        transform: none;
+      }
+      .main-content {
+        margin-left: 240px;
+        margin-top: 60px;
+        width: calc(100% - 240px);
+      }
+    }
+
+    /* PAGE TITLE */
+    .main-content h1 {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+    }
+
+    /* TOOLS GRID & CARDS */
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+      /* ensure no overflow hidden here */
+      overflow: visible;
+    }
+    .tool-card {
+      position: relative;
+      background: #fafafa;
+      border: 1px solid #eee;
+      border-radius: 6px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+      transition: transform 0.3s, box-shadow 0.3s;
+      overflow: visible; /* So tooltip can extend outside the card if needed */
+      padding: 16px;
+    }
+    /* This container can scroll if text is long */
+    .card-scroll-content {
+      max-height: 200px; /* adjust as needed */
+      overflow-y: auto;
+      margin-bottom: 8px;
+    }
+    .tool-card h2 {
+      margin-bottom: 8px;
+      font-size: 1.2em;
+      color: #333;
+    }
+    .tool-card p {
+      font-size: 0.95em;
+      line-height: 1.4;
+      margin-bottom: 10px;
+      color: #666;
+    }
+    .tool-card button {
+      margin-top: 8px;
+    }
+    .tool-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+    }
+
+    /* BUTTONS */
+    .btn-primary {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      cursor: pointer;
+      margin: 5px 0;
+      margin-bottom: 10px;
+      border-radius: 4px;
+      transition: background-color 0.2s;
+    }
+    .btn-primary:hover {
+      background-color: #0069d9;
+    }
+    .btn-secondary {
+      background-color: #6c757d;
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      cursor: pointer;
+      margin: 5px 0;
+      border-radius: 4px;
+      transition: background-color 0.2s;
+    }
+    .btn-secondary:hover {
+      background-color: #5a6268;
+    }
+
+    /* MODALS */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 999;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.4);
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-content {
+      position: relative;
+      width: 440px;
+      max-width: 90%;
+      padding: 24px;
+      border-radius: 8px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      margin: auto;
+      background-color: #fff;
+    }
+    .close {
+      color: #aaa;
+      position: absolute;
+      right: 15px;
+      top: 15px;
+      font-size: 24px;
+      cursor: pointer;
+    }
+    .close:hover {
+      color: #000;
+    }
+
+    /* FORM ELEMENTS */
+    .modal-content label {
+      display: block;
+      margin-top: 10px;
+      font-weight: 600;
+    }
+    .modal-content input {
+      width: 100%;
+      margin-top: 5px;
+      margin-bottom: 10px;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    /* Custom tooltip styles */
+    .tooltip-trigger {
+      cursor: help;
+      display: inline-block;
+      background-color: #ddd;
+      border-radius: 50%;
+      font-size: 0.75em;
+      padding: 0.2em 0.45em;
+      margin-left: 4px;
+      position: relative;
+      z-index: 2; /* Make sure the icon is above the card content */
+    }
+    .tooltip-trigger::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: calc(100% + 8px); /* space above the icon */
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(0,0,0,0.8);
+      color: #fff;
+      padding: 6px 8px;
+      border-radius: 4px;
+      font-size: 0.8em;
+      text-align: center;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      white-space: normal;
+      width: max-content;
+      max-width: 200px;
+      z-index: 9999; /* On top of everything */
+    }
+    .tooltip-trigger::before {
+      content: "";
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 6px;
+      border-style: solid;
+      border-color: rgba(0,0,0,0.8) transparent transparent transparent;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      pointer-events: none;
+      z-index: 9999;
+    }
+    /* Show the tooltip on hover */
+    .tooltip-trigger:hover::after,
+    .tooltip-trigger:hover::before {
+      opacity: 1;
+    }
+  </style>
+
+  <script>
+    // Basic initialization
+    function initToolsPage() {
+      setupToolsModals();
+      setupROICalculator();
+      setupMAOCalculator();
+      setupRehabCalculator();
+      setupMortgageCalculator();
+      setupCashFlowCalculator();
+      setupRentalROICalculator();
+      setupCapRateCalculator();
+      setupBRRRRCalculator();
+      setupCoCCalculator();
+    }
+
+    /** 
+     * Show/hide modals based on data-tool and data-close 
+     */
+    function setupToolsModals() {
+      // Find all "Open" buttons
+      const openToolButtons = document.querySelectorAll(".open-tool-btn");
+      openToolButtons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const modalId = btn.getAttribute("data-tool");
+          const modal = document.getElementById(modalId);
+          if (modal) {
+            modal.style.display = "flex"; // show the modal
+          }
+        });
+      });
+
+      // Find all "Close" spans
+      const closeSpans = document.querySelectorAll(".close");
+      closeSpans.forEach((span) => {
+        span.addEventListener("click", () => {
+          const closeId = span.getAttribute("data-close");
+          const modal = document.getElementById(closeId);
+          if (modal) {
+            modal.style.display = "none"; // hide the modal
+          }
+        });
+      });
+
+      // Close if user clicks outside the .modal-content
+      window.addEventListener("click", (e) => {
+        if (e.target.classList.contains("modal")) {
+          e.target.style.display = "none";
+        }
+      });
+    }
+
+    // ROI CALCULATOR
+    function setupROICalculator() {
+      const calcROIBtn = document.getElementById("calcROIBtn");
+      if (!calcROIBtn) return;
+      calcROIBtn.addEventListener("click", () => {
+        const purchasePrice = parseFloat(document.getElementById("roiPurchasePrice").value) || 0;
+        const rehab = parseFloat(document.getElementById("roiRehabCost").value) || 0;
+        const holding = parseFloat(document.getElementById("roiHoldingCost").value) || 0;
+        const financing = parseFloat(document.getElementById("roiFinancingCost").value) || 0;
+        const salePrice = parseFloat(document.getElementById("roiSalePrice").value) || 0;
+
+        const totalInvestment = purchasePrice + rehab + holding + financing;
+        const profit = salePrice - totalInvestment;
+        const roi = totalInvestment > 0 ? (profit / totalInvestment) * 100 : 0;
+
+        document.getElementById("roiResult").textContent = roi.toFixed(2);
+        document.getElementById("roiProfit").textContent = profit.toFixed(2);
+      });
+    }
+
+    // MAO CALCULATOR
+    function setupMAOCalculator() {
+      const calcMAOBtn = document.getElementById("calcMAOBtn");
+      if (!calcMAOBtn) return;
+      calcMAOBtn.addEventListener("click", () => {
+        const arv = parseFloat(document.getElementById("arvInput").value) || 0;
+        const offerPercent = parseFloat(document.getElementById("offerPercentInput").value) || 70;
+        const repairCosts = parseFloat(document.getElementById("repairCostsInput").value) || 0;
+        const wholesaleFee = parseFloat(document.getElementById("wholesaleFeeInput").value) || 0;
+
+        const mao = arv * (offerPercent / 100) - repairCosts - wholesaleFee;
+        document.getElementById("maoResult").textContent = mao.toFixed(2);
+      });
+    }
+
+    // REHAB CALCULATOR
+    function setupRehabCalculator() {
+      const calcRehabBtn = document.getElementById("calcRehabBtn");
+      if (!calcRehabBtn) return;
+      calcRehabBtn.addEventListener("click", () => {
+        const roof = parseFloat(document.getElementById("rehabRoof").value) || 0;
+        const kitchen = parseFloat(document.getElementById("rehabKitchen").value) || 0;
+        const baths = parseFloat(document.getElementById("rehabBathrooms").value) || 0;
+        const misc = parseFloat(document.getElementById("rehabMisc").value) || 0;
+
+        const total = roof + kitchen + baths + misc;
+        document.getElementById("rehabTotalResult").textContent = total.toFixed(2);
+      });
+    }
+
+    // MORTGAGE CALCULATOR
+    function setupMortgageCalculator() {
+      const calcMortgageBtn = document.getElementById("calcMortgageBtn");
+      if (!calcMortgageBtn) return;
+      calcMortgageBtn.addEventListener("click", () => {
+        const principal = parseFloat(document.getElementById("mortgagePrincipal").value) || 0;
+        const annualRate = parseFloat(document.getElementById("mortgageRate").value) || 0;
+        const years = parseFloat(document.getElementById("mortgageYears").value) || 30;
+        const monthlyTaxes = parseFloat(document.getElementById("mortgageTaxes").value) || 0;
+        const monthlyInsurance = parseFloat(document.getElementById("mortgageInsurance").value) || 0;
+
+        const monthlyRate = annualRate / 100 / 12;
+        const n = years * 12;
+        let payment = 0; // P&I only
+
+        if (monthlyRate > 0) {
+          payment = principal * (monthlyRate / (1 - Math.pow(1 + monthlyRate, -n)));
+        } else {
+          payment = principal / n;
+        }
+        document.getElementById("mortgagePaymentResult").textContent = payment.toFixed(2);
+
+        // Approx. full payment with T&I
+        const fullPayment = payment + monthlyTaxes + monthlyInsurance;
+        document.getElementById("mortgageFullPayment").textContent = fullPayment.toFixed(2);
+      });
+    }
+
+    // CASH FLOW CALCULATOR
+    function setupCashFlowCalculator() {
+      const calcCashFlowBtn = document.getElementById("calcCashFlowBtn");
+      if (!calcCashFlowBtn) return;
+      calcCashFlowBtn.addEventListener("click", () => {
+        const rent = parseFloat(document.getElementById("cfRent").value) || 0;
+        const mortgage = parseFloat(document.getElementById("cfMortgage").value) || 0;
+        const expenses = parseFloat(document.getElementById("cfExpenses").value) || 0;
+
+        const monthlyFlow = rent - mortgage - expenses;
+        document.getElementById("cashFlowResult").textContent = monthlyFlow.toFixed(2);
+      });
+    }
+
+    // RENTAL ROI CALCULATOR
+    function setupRentalROICalculator() {
+      const calcRentalRoiBtn = document.getElementById("calcRentalRoiBtn");
+      if (!calcRentalRoiBtn) return;
+      calcRentalRoiBtn.addEventListener("click", () => {
+        const purchase = parseFloat(document.getElementById("rentalPurchase").value) || 0;
+        const downPayment = parseFloat(document.getElementById("rentalDownPayment").value) || 0;
+        const closingCosts = parseFloat(document.getElementById("rentalClosingCosts").value) || 0;
+        const monthlyNet = parseFloat(document.getElementById("rentalMonthlyNetIncome").value) || 0;
+
+        const annualNet = monthlyNet * 12;
+        const totalCashInvested = downPayment + closingCosts;
+        let annualROI = 0;
+        if (totalCashInvested > 0) {
+          annualROI = (annualNet / totalCashInvested) * 100;
+        }
+        document.getElementById("rentalRoiResult").textContent = annualROI.toFixed(2);
+      });
+    }
+
+    // CAP RATE CALCULATOR
+    function setupCapRateCalculator() {
+      const btn = document.getElementById("calcCapRateBtn");
+      if (!btn) return;
+      btn.addEventListener("click", () => {
+        const noi = parseFloat(document.getElementById("capNOI").value) || 0;
+        const price = parseFloat(document.getElementById("capPrice").value) || 0;
+        let capRate = 0;
+        if (price > 0) {
+          capRate = (noi / price) * 100;
+        }
+        document.getElementById("capRateResult").textContent = capRate.toFixed(2);
+      });
+    }
+
+    // BRRRR CALCULATOR
+    function setupBRRRRCalculator() {
+      const btn = document.getElementById("calcBRRRRBtn");
+      if (!btn) return;
+      btn.addEventListener("click", () => {
+        const buyPrice = parseFloat(document.getElementById("brrrrBuyPrice").value) || 0;
+        const rehabCost = parseFloat(document.getElementById("brrrrRehab").value) || 0;
+        const appraised = parseFloat(document.getElementById("brrrrAppraised").value) || 0;
+        const refiPercent = parseFloat(document.getElementById("brrrrRefiPercent").value) || 75;
+
+        const totalCost = buyPrice + rehabCost;
+        const loanAmount = appraised * (refiPercent / 100);
+        const cashLeft = totalCost - loanAmount;
+
+        document.getElementById("brrrrLoan").textContent = loanAmount.toFixed(2);
+        document.getElementById("brrrrCashLeft").textContent =
+          cashLeft > 0 ? cashLeft.toFixed(2) : "0.00";
+      });
+    }
+
+    // CASH-ON-CASH CALCULATOR
+    function setupCoCCalculator() {
+      const btn = document.getElementById("calcCoCBtn");
+      if (!btn) return;
+      btn.addEventListener("click", () => {
+        const downPayment = parseFloat(document.getElementById("cocDownPayment").value) || 0;
+        const annualCashFlow = parseFloat(document.getElementById("cocAnnualCashFlow").value) || 0;
+        let coc = 0;
+        if (downPayment > 0) {
+          coc = (annualCashFlow / downPayment) * 100;
+        }
+        document.getElementById("cocResult").textContent = coc.toFixed(2);
+      });
+    }
+
+    // Toggle sidebar on smaller screens
+    const sidebarToggle = document.getElementById("sidebarToggle");
+    const sidebar = document.getElementById("sidebar");
+    sidebarToggle.addEventListener("click", () => {
+      sidebar.classList.toggle("sidebar-open");
+    });
+
+    // Initialize
+    document.addEventListener("DOMContentLoaded", initToolsPage);
+  </script>
+</body>
+</html>

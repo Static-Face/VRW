@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Advanced Settings - My Wholesaling Hub</title>
+</head>
+<body>
+  <!-- HEADER -->
+  <header class="app-header">
+    <div class="brand">
+      <span>My Wholesaling Hub</span>
+    </div>
+    <button id="sidebarToggle" class="sidebar-toggle">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </button>
+  </header>
+
+  <!-- SIDEBAR NAV -->
+  <aside class="sidebar" id="sidebar">
+    <nav class="nav-menu">
+      <ul>
+        <li><a href="index.html">Dashboard</a></li>
+        <li><a href="leads.html">Leads</a></li>
+        <li><a href="buyers.html">Buyers</a></li>
+        <li><a href="properties.html">Properties</a></li>
+        <li><a href="tools.html">Tools</a></li>
+        <li><a href="scripts.html">Scripts</a></li>
+        <li><a href="contracts.html">Contracts</a></li>
+        <li><a href="settings.html">Settings</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+    <h1>Advanced Settings</h1>
+    <p class="page-description">
+      Configure deeper system behaviors, debug features, integrations, and backup solutions.  
+      Please proceed carefully—these settings can have major effects.
+    </p>
+
+    <div class="advanced-settings-container">
+
+      <!-- SYSTEM CONFIG SECTION -->
+      <section class="settings-section" id="systemConfigSection">
+        <h2>System Configuration</h2>
+        <p class="section-description">
+          Manage global debug modes, performance flags, and environment variables.
+        </p>
+
+        <div class="form-row">
+          <label for="debugModeToggle" class="toggle-label">
+            <span>Enable Debug Mode</span>
+            <span class="tooltip-trigger" data-tooltip="Activates verbose logging & developer features.">?</span>
+          </label>
+          <label class="switch">
+            <input type="checkbox" id="debugModeToggle" />
+            <span class="slider round"></span>
+          </label>
+        </div>
+
+        <div class="form-row">
+          <label for="verboseLoggingToggle" class="toggle-label">
+            <span>Verbose Logging</span>
+            <span class="tooltip-trigger" data-tooltip="Logs extra details about system processes.">?</span>
+          </label>
+          <label class="switch">
+            <input type="checkbox" id="verboseLoggingToggle" />
+            <span class="slider round"></span>
+          </label>
+        </div>
+
+        <div class="form-row">
+          <label for="maintenanceModeToggle" class="toggle-label">
+            <span>Maintenance Mode</span>
+            <span class="tooltip-trigger" data-tooltip="Restricts user access for system maintenance.">?</span>
+          </label>
+          <label class="switch">
+            <input type="checkbox" id="maintenanceModeToggle" />
+            <span class="slider round"></span>
+          </label>
+        </div>
+
+        <div class="form-row column-split">
+          <div>
+            <label for="environmentSelect">
+              Environment
+              <span class="tooltip-trigger" data-tooltip="Choose Dev/Staging/Production environment for the entire system.">?</span>
+            </label>
+            <select id="environmentSelect">
+              <option value="dev">Development</option>
+              <option value="staging">Staging</option>
+              <option value="production">Production</option>
+            </select>
+          </div>
+          <div>
+            <label for="maxThreads">
+              Max Worker Threads
+              <span class="tooltip-trigger" data-tooltip="Controls concurrency for background tasks. Higher is faster but uses more resources.">?</span>
+            </label>
+            <input 
+              type="number" 
+              id="maxThreads" 
+              min="1" 
+              value="4"
+            />
+          </div>
+        </div>
+      </section>
+
+      <!-- API & INTEGRATIONS SECTION -->
+      <section class="settings-section" id="apiIntegrationsSection">
+        <h2>API &amp; Integrations</h2>
+        <p class="section-description">
+          Configure external service keys, endpoints, timeouts, and advanced integration behaviors.
+        </p>
+
+        <div class="form-row column-split">
+          <div>
+            <label for="primaryApiKey">Primary API Key</label>
+            <input type="password" id="primaryApiKey" placeholder="••••••••••" />
+          </div>
+          <div>
+            <label for="secondaryApiKey">Secondary Secret Key</label>
+            <input type="password" id="secondaryApiKey" placeholder="••••••••••" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <label for="webhookURL">Webhook Endpoint</label>
+          <input 
+            type="text" 
+            id="webhookURL" 
+            placeholder="https://example.com/hooks/..." 
+          />
+        </div>
+
+        <div class="form-row column-split">
+          <div>
+            <label for="apiTimeout">API Timeout (sec)</label>
+            <input 
+              type="number" 
+              id="apiTimeout" 
+              min="1" 
+              value="30" 
+            />
+          </div>
+          <div>
+            <label for="retryCount">Max Retry Count</label>
+            <input 
+              type="number" 
+              id="retryCount" 
+              min="0" 
+              value="3" 
+            />
+          </div>
+        </div>
+      </section>
+
+      <!-- SECURITY & ENCRYPTION SECTION -->
+      <section class="settings-section" id="securitySection">
+        <h2>Security &amp; Encryption</h2>
+        <p class="section-description">
+          Manage password complexity, encryption settings, and advanced security policies.
+        </p>
+
+        <div class="form-row">
+          <label for="encryptionToggle" class="toggle-label">
+            <span>Enable Data Encryption</span>
+            <span class="tooltip-trigger" data-tooltip="Encrypts stored data at rest (requires system restart).">?</span>
+          </label>
+          <label class="switch">
+            <input type="checkbox" id="encryptionToggle" />
+            <span class="slider round"></span>
+          </label>
+        </div>
+
+        <div class="form-row column-split">
+          <div>
+            <label for="encryptionAlgorithm">
+              Encryption Algorithm
+              <span class="tooltip-trigger" data-tooltip="Choose your preferred encryption method.">?</span>
+            </label>
+            <select id="encryptionAlgorithm">
+              <option value="AES-256">AES-256</option>
+              <option value="RSA-2048">RSA-2048</option>
+              <option value="ChaCha20">ChaCha20</option>
+            </select>
+          </div>
+          <div>
+            <label for="encryptionKeyRotation">
+              Key Rotation (days)
+              <span class="tooltip-trigger" data-tooltip="Number of days before encryption keys rotate.">?</span>
+            </label>
+            <input 
+              type="number" 
+              id="encryptionKeyRotation" 
+              min="1" 
+              value="90" 
+            />
+          </div>
+        </div>
+      </section>
+
+      <!-- BACKUP & RESTORE SECTION -->
+      <section class="settings-section" id="backupSection">
+        <h2>Backup &amp; Restore</h2>
+        <p class="section-description">
+          Run manual backups, restore from a file, and schedule automated backups.
+        </p>
+
+        <div class="backup-restore-container">
+          <div class="backup-restore-card">
+            <h3>Manual Backup</h3>
+            <p>Create a new backup of your data right now.</p>
+            <button class="btn backup-btn" id="manualBackupBtn">Create Backup</button>
+          </div>
+          <div class="backup-restore-card">
+            <h3>Restore From Backup</h3>
+            <p>Select a backup file to restore from.</p>
+            <input type="file" id="restoreFileInput" accept=".zip,.bak" />
+            <button class="btn restore-btn" id="restoreDataBtn">Restore</button>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <label for="autoBackupToggle" class="toggle-label">
+            <span>Enable Automatic Backups</span>
+            <span class="tooltip-trigger" data-tooltip="Automatically backup system data on a schedule.">?</span>
+          </label>
+          <label class="switch">
+            <input type="checkbox" id="autoBackupToggle" />
+            <span class="slider round"></span>
+          </label>
+        </div>
+
+        <div class="form-row column-split">
+          <div>
+            <label for="backupFrequency">Backup Frequency</label>
+            <select id="backupFrequency">
+              <option value="daily">Daily</option>
+              <option value="weekly" selected>Weekly</option>
+              <option value="monthly">Monthly</option>
+            </select>
+          </div>
+          <div>
+            <label for="backupTime">Backup Time (24hr)</label>
+            <input type="time" id="backupTime" value="02:00" />
+          </div>
+        </div>
+      </section>
+
+      <!-- DATA CLEANUP SECTION -->
+      <section class="settings-section" id="dataCleanupSection">
+        <h2>Data Cleanup</h2>
+        <p class="section-description">
+          Configure or automate older data removal (leads, logs, etc.).
+        </p>
+
+        <div class="form-row">
+          <label for="pruneOldLeadsToggle" class="toggle-label">
+            <span>Auto-Prune Leads After 180 Days</span>
+            <span class="tooltip-trigger" data-tooltip="Removes leads older than 180 days from the system.">?</span>
+          </label>
+          <label class="switch">
+            <input type="checkbox" id="pruneOldLeadsToggle" />
+            <span class="slider round"></span>
+          </label>
+        </div>
+
+        <div class="form-row">
+          <button class="btn remove-data-btn" id="purgeLogsBtn">Purge Old Logs</button>
+          <p class="note">
+            Deletes logs older than 90 days. This cannot be undone.
+          </p>
+        </div>
+      </section>
+
+      <!-- ADVANCED JSON CONFIG SECTION (optional) -->
+      <section class="settings-section" id="advancedJsonConfig">
+        <h2>Advanced JSON Config</h2>
+        <p class="section-description">
+          Directly edit or paste advanced configuration in JSON form.  
+          Use with caution—improper format may cause issues.
+        </p>
+
+        <textarea id="jsonConfigInput" rows="6" placeholder='{
+  "featureFlagX": true,
+  "maxConnections": 100,
+  "experimentalMode": false
+}'></textarea>
+      </section>
+
+    </div> <!-- end advanced-settings-container -->
+
+    <!-- SAVE / CANCEL -->
+    <div class="form-actions">
+      <button class="btn save-btn" id="saveAdvancedSettingsBtn">Save All Settings</button>
+      <button class="btn cancel-btn" id="cancelBtn">Cancel</button>
+      <button class="btn return-btn" id="returnSettingsBtn">
+        Return to Settings
+      </button>
+    </div>
+    
+    <style>
+      #returnSettingsBtn {
+        background-color: #007bff;
+        color: #fff;
+      }
+    
+      #returnSettingsBtn:hover {
+        background-color: #0056b3;
+      }
+    </style>
+    
+
+  </main>
+
+  <!-- =========================
+       SHARED CSS / STYLES
+  ========================= -->
+  <style>
+    /* RESET */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    /* BODY, HEADERS, SIDEBAR, ETC. match your style */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f1f2f3;
+      color: #333;
+    }
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+    .app-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(135deg, #444, #333);
+      color: #fff;
+      padding: 0.75rem 1rem;
+      height: 60px;
+      z-index: 1000;
+    }
+    .app-header .brand {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+    .sidebar-toggle {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+    .sidebar-toggle .bar {
+      width: 25px;
+      height: 3px;
+      background-color: #fff;
+      margin: 4px 0;
+      transition: 0.4s;
+    }
+
+    .sidebar {
+      background: linear-gradient(135deg, #555, #333);
+      color: #fff;
+      width: 240px;
+      flex-shrink: 0;
+      padding: 1rem;
+      transition: transform 0.3s ease;
+      min-height: calc(100vh - 3.25rem);
+      overflow: auto;
+    }
+    @media (max-width: 768px) {
+      .sidebar {
+        position: fixed;
+        top: 3.25rem; 
+        left: 0;
+        height: calc(100vh - 3.25rem);
+        transform: translateX(-250px);
+        z-index: 999;
+      }
+      .sidebar-toggle {
+        display: flex;
+      }
+      .sidebar-open {
+        transform: translateX(0);
+      }
+    }
+    .nav-menu ul {
+      list-style: none;
+      margin-top: 1rem;
+    }
+    .nav-menu ul li {
+      margin: 1rem 0;
+    }
+    .nav-menu ul li a {
+      display: block;
+      padding: 0.5rem 0.75rem;
+      border-radius: 4px;
+      font-weight: 500;
+      transition: background-color 0.2s ease;
+    }
+    .nav-menu ul li a:hover {
+      background-color: rgba(255,255,255,0.1);
+    }
+    .nav-menu ul li a.active {
+      background-color: rgba(255,255,255,0.2);
+    }
+
+    /* MAIN CONTENT LAYOUT */
+    .main-content {
+      padding: 1.5rem;
+    }
+    @media (max-width: 768px) {
+      .main-content {
+        margin-left: 0;
+      }
+    }
+    @media (min-width: 769px) {
+      .app-header {
+        position: fixed;
+        top: 0; left: 0; right: 0;
+      }
+      .sidebar {
+        position: fixed;
+        top: 60px;
+        left: 0;
+        bottom: 0;
+        width: 240px;
+        transform: none;
+      }
+      .main-content {
+        margin-left: 240px;
+        margin-top: 60px;
+        width: calc(100% - 240px);
+      }
+    }
+
+    /* PAGE TITLE & DESCRIPTION */
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 0.5rem;
+    }
+    .page-description {
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+      color: #555;
+    }
+
+    /* ADVANCED SETTINGS WRAPPER */
+    .advanced-settings-container {
+      background: #fff;
+      padding: 1.5rem;
+      border-radius: 6px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .settings-section {
+      margin-bottom: 2rem;
+    }
+    .settings-section h2 {
+      font-size: 1.3rem;
+      margin-bottom: 0.25rem;
+    }
+    .section-description {
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 1rem;
+    }
+
+    /* FORM ROWS & LABELS */
+    .form-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    .form-row.column-split {
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .form-row.column-split > div {
+      flex: 1;
+      min-width: 180px;
+      display: flex;
+      flex-direction: column;
+    }
+    .form-row label {
+      font-weight: 600;
+      margin-right: 1rem;
+      display: flex;
+      align-items: center;
+    }
+    .toggle-label {
+      flex: 1;
+      cursor: pointer;
+      font-weight: normal;
+      display: flex;
+      gap: 0.4rem;
+      align-items: center;
+    }
+    input[type="text"],
+    input[type="password"],
+    input[type="number"],
+    input[type="time"],
+    select,
+    textarea {
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      flex: 1;
+    }
+    textarea {
+      resize: vertical;
+      margin-top: 0.5rem;
+      font-family: monospace;
+    }
+
+    /* SWITCH (TOGGLE) */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 46px;
+      height: 24px;
+    }
+    .switch input {
+      opacity: 0; 
+      width: 0; 
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 24px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 16px;
+      width: 16px;
+      left: 4px;
+      bottom: 4px;
+      background-color: #fff;
+      transition: .4s;
+      border-radius: 50%;
+    }
+    input:checked + .slider {
+      background-color: #28a745;
+    }
+    input:checked + .slider:before {
+      transform: translateX(22px);
+    }
+    .slider.round {
+      border-radius: 24px;
+    }
+    .slider.round:before {
+      border-radius: 50%;
+    }
+
+    /* BACKUP/RESTORE CARDS */
+    .backup-restore-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .backup-restore-card {
+      flex: 1;
+      min-width: 240px;
+      background: #fafafa;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 1rem;
+    }
+    .backup-restore-card h3 {
+      margin-bottom: 0.5rem;
+    }
+    .backup-restore-card p {
+      margin-bottom: 0.75rem;
+      color: #555;
+    }
+
+    /* BUTTONS */
+    .btn {
+      display: inline-block;
+      padding: 0.6rem 1rem;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      border: none;
+      transition: background-color 0.2s ease;
+    }
+    .backup-btn,
+    .restore-btn,
+    .remove-data-btn {
+      background-color: #007bff;
+      color: #fff;
+    }
+    .backup-btn:hover,
+    .restore-btn:hover,
+    .remove-data-btn:hover {
+      background-color: #0056b3;
+    }
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+    }
+    .save-btn {
+      background-color: #28a745;
+      color: #fff;
+    }
+    .save-btn:hover {
+      background-color: #218838;
+    }
+    .cancel-btn {
+      background-color: #6c757d;
+      color: #fff;
+    }
+    .cancel-btn:hover {
+      background-color: #5a6268;
+    }
+
+    /* NOTES, TIPS, ETC. */
+    .note {
+      font-size: 0.85rem;
+      margin-top: 0.25rem;
+      color: #999;
+    }
+
+    /* TOOLTIP HINTS */
+    .tooltip-trigger {
+      cursor: help;
+      display: inline-block;
+      background-color: #ddd;
+      border-radius: 50%;
+      font-size: 0.75em;
+      padding: 0.2em 0.4em;
+      position: relative;
+    }
+    .tooltip-trigger::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(0,0,0,0.8);
+      color: #fff;
+      padding: 6px 8px;
+      border-radius: 4px;
+      font-size: 0.8em;
+      text-align: center;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      white-space: break-spaces;
+      width: max-content;
+      max-width: 220px;
+      z-index: 9999;
+    }
+    .tooltip-trigger::before {
+      content: "";
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 6px;
+      border-style: solid;
+      border-color: rgba(0,0,0,0.8) transparent transparent transparent;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      pointer-events: none;
+      z-index: 9999;
+    }
+    .tooltip-trigger:hover::after,
+    .tooltip-trigger:hover::before {
+      opacity: 1;
+    }
+
+    /* FORM ACTIONS */
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .btn {
+      display: inline-block;
+      padding: 0.6rem 1rem;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      border: none;
+      transition: background-color 0.2s ease;
+    }
+    .save-btn {
+      background-color: #28a745;
+      color: #fff;
+    }
+    .save-btn:hover {
+      background-color: #218838;
+    }
+    .cancel-btn {
+      background-color: #6c757d;
+      color: #fff;
+    }
+    .cancel-btn:hover {
+      background-color: #5a6268;
+    }
+    .returnSettingsBtn {
+      background-color: #007bff;
+      color: #fff;
+    }
+    .returnSettingsBtn :hover{
+      background-color: #0056b3;
+    }
+
+  </style>
+
+  <!-- =============================
+       JAVASCRIPT (with localStorage demo)
+  ============================== -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // SIDEBAR TOGGLE (Mobile)
+      const sidebar = document.getElementById('sidebar');
+      const toggleBtn = document.getElementById('sidebarToggle');
+      toggleBtn.addEventListener('click', () => {
+        sidebar.classList.toggle('sidebar-open');
+      });
+
+      // --- SELECTORS FOR OUR FIELDS ---
+      const debugModeToggle         = document.getElementById('debugModeToggle');
+      const verboseLoggingToggle    = document.getElementById('verboseLoggingToggle');
+      const maintenanceModeToggle   = document.getElementById('maintenanceModeToggle');
+      const environmentSelect       = document.getElementById('environmentSelect');
+      const maxThreadsInput         = document.getElementById('maxThreads');
+      
+      const primaryApiKeyInput      = document.getElementById('primaryApiKey');
+      const secondaryApiKeyInput    = document.getElementById('secondaryApiKey');
+      const webhookURLInput         = document.getElementById('webhookURL');
+      const apiTimeoutInput         = document.getElementById('apiTimeout');
+      const retryCountInput         = document.getElementById('retryCount');
+
+      const encryptionToggle        = document.getElementById('encryptionToggle');
+      const encryptionAlgorithmSel  = document.getElementById('encryptionAlgorithm');
+      const encryptionKeyRotation   = document.getElementById('encryptionKeyRotation');
+
+      const manualBackupBtn         = document.getElementById('manualBackupBtn');
+      const restoreFileInput        = document.getElementById('restoreFileInput');
+      const restoreDataBtn          = document.getElementById('restoreDataBtn');
+      const autoBackupToggle        = document.getElementById('autoBackupToggle');
+      const backupFrequencySelect   = document.getElementById('backupFrequency');
+      const backupTimeInput         = document.getElementById('backupTime');
+
+      const pruneOldLeadsToggle     = document.getElementById('pruneOldLeadsToggle');
+      const purgeLogsBtn            = document.getElementById('purgeLogsBtn');
+
+      const jsonConfigInput         = document.getElementById('jsonConfigInput');
+
+      const saveAdvancedSettingsBtn = document.getElementById('saveAdvancedSettingsBtn');
+      const cancelBtn               = document.getElementById('cancelBtn');
+
+      // --- LOAD FROM LOCALSTORAGE (or from server) ---
+      const savedSettings = JSON.parse(localStorage.getItem('advancedSettings')) || {};
+
+      // Populate each field if it exists in localStorage
+      debugModeToggle.checked          = !!savedSettings.debugMode;
+      verboseLoggingToggle.checked     = !!savedSettings.verboseLogging;
+      maintenanceModeToggle.checked    = !!savedSettings.maintenanceMode;
+      environmentSelect.value          = savedSettings.environment    || "dev";
+      maxThreadsInput.value            = savedSettings.maxThreads      || 4;
+
+      primaryApiKeyInput.value         = savedSettings.primaryApiKey   || "";
+      secondaryApiKeyInput.value       = savedSettings.secondaryApiKey || "";
+      webhookURLInput.value            = savedSettings.webhookURL      || "";
+      apiTimeoutInput.value            = savedSettings.apiTimeout      || 30;
+      retryCountInput.value            = savedSettings.retryCount      || 3;
+
+      encryptionToggle.checked         = !!savedSettings.encryptionEnabled;
+      encryptionAlgorithmSel.value     = savedSettings.encryptionAlgorithm || "AES-256";
+      encryptionKeyRotation.value      = savedSettings.encryptionKeyRotation|| 90;
+
+      autoBackupToggle.checked         = !!savedSettings.autoBackup;
+      backupFrequencySelect.value      = savedSettings.backupFrequency || "weekly";
+      backupTimeInput.value           = savedSettings.backupTime       || "02:00";
+
+      pruneOldLeadsToggle.checked      = !!savedSettings.pruneOldLeads;
+      jsonConfigInput.value           = savedSettings.jsonConfig || `{
+  "featureFlagX": true,
+  "maxConnections": 100,
+  "experimentalMode": false
+}`;
+
+      // --- EVENT LISTENERS FOR DEMO ---
+      manualBackupBtn.addEventListener('click', () => {
+        alert("Manual backup triggered (demo).");
+      });
+      restoreDataBtn.addEventListener('click', () => {
+        const file = restoreFileInput.files[0];
+        if (!file) {
+          alert("Please select a backup file first.");
+          return;
+        }
+        // Real restore logic would go here
+        alert("Restoring data from backup: " + file.name);
+      });
+      purgeLogsBtn.addEventListener('click', () => {
+        if (confirm("Are you sure you want to purge old logs? This cannot be undone.")) {
+          alert("Old logs purged (demo).");
+        }
+      });
+
+      // --- SAVE TO LOCALSTORAGE (DEMO) ---
+      saveAdvancedSettingsBtn.addEventListener('click', () => {
+        // Gather all fields into an object
+        const newSettings = {
+          debugMode:            debugModeToggle.checked,
+          verboseLogging:       verboseLoggingToggle.checked,
+          maintenanceMode:      maintenanceModeToggle.checked,
+          environment:          environmentSelect.value,
+          maxThreads:           parseInt(maxThreadsInput.value, 10),
+
+          primaryApiKey:        primaryApiKeyInput.value,
+          secondaryApiKey:      secondaryApiKeyInput.value,
+          webhookURL:           webhookURLInput.value,
+          apiTimeout:           parseInt(apiTimeoutInput.value, 10),
+          retryCount:           parseInt(retryCountInput.value, 10),
+
+          encryptionEnabled:    encryptionToggle.checked,
+          encryptionAlgorithm:  encryptionAlgorithmSel.value,
+          encryptionKeyRotation:parseInt(encryptionKeyRotation.value, 10),
+
+          autoBackup:           autoBackupToggle.checked,
+          backupFrequency:      backupFrequencySelect.value,
+          backupTime:           backupTimeInput.value,
+
+          pruneOldLeads:        pruneOldLeadsToggle.checked,
+          jsonConfig:           jsonConfigInput.value
+        };
+
+        // Save to localStorage for this demo (replace with real server update if needed)
+        localStorage.setItem('advancedSettings', JSON.stringify(newSettings));
+        alert("Advanced Settings Saved Successfully (demo).");
+      });
+
+      cancelBtn.addEventListener('click', () => {
+        if (confirm("Discard any changes and revert?")) {
+          window.location.reload(); // or navigate away, etc.
+        }
+      });
+    });
+
+    // Return to normal settings
+    const returnBtn = document.getElementById('returnSettingsBtn');
+      returnBtn.addEventListener('click', () => {
+        window.location.href = "settings.html";
+      });
+  </script>
+</body>
+</html>
